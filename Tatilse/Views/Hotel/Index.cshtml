@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Hotel>
+<h2>Hoteller</h2> @* hotel başlığı *@
+<a href="/Hotel/Create" class="btn btn-primary">Hotel Ekle</a> @*hotel ekle butonu-mavi | tuşa basınca yönlendireceği link*@
+<hr> @*çizgi*@
+	<table class="table table-bordered"> @*karelere bölünmüş tablo görünümü için gerekli class*@
+	
+		<thead>
+			<tr>
+			<th style="width: 150px;">@Html.DisplayNameFor(m => m.hotel_name)</th>  @*Sütunlar | Hotel ad*@
+			<th>@Html.DisplayNameFor(m => m.hotel_image)</th>
+			<th >@Html.DisplayNameFor(m => m.hotel_description)</th>
+			<th style ="width: 150px;"></th>
+			</tr>
+		</thead>
+		<tbody>
+		@foreach (var item in Model) @*var hotel in Model*@
+		{
+			<tr>
+				<td>@Html.DisplayFor(modelItem => item.hotel_name)</td>  @* @hotel.hotel_name  *@
+				<td>@Html.DisplayFor(modelItem => item.hotel_image)</td>  @*Satırlar*@
+				<td>@Html.DisplayFor(modelItem => item.hotel_description)</td>
+				<td> 
+					<a asp-controller="Hotel" asp-action="Edit" asp-route-id="@item.hotel_id" class="btn btn-sm btn-primary">Edit</a>
+					<a asp-controller="Hotel" asp-action="Delete" asp-route-id="@item.hotel_id" class="btn btn-sm btn-danger">Delete</a>
+				</td>	
+			</tr>
+		}
+	
+		</tbody>
+	</table>
