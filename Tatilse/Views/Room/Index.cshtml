@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Room>
+<h2>Odalar</h2> 
+<a href="/Room/Create" class="btn btn-primary">Oda Ekle</a> 
+<hr> 
+<table class="table table-bordered">
+
+
+	<thead>
+		<tr>
+			<th style ="width: 150px;">@Html.DisplayNameFor(m => m.room_id)</th>
+			<th>@Html.DisplayNameFor(m => m.room_name)</th>
+			<th>@Html.DisplayNameFor(m => m.room_price)</th>
+			<th>@Html.DisplayNameFor(m => m.room_quantity)</th>
+			<th>@Html.DisplayNameFor(m => m.room_capacity)</th>
+			<th>@Html.DisplayNameFor(m => m.room_image)</th>
+			<th>@Html.DisplayNameFor(m => m.hotel_id)</th>
+			<th style="width: 150px;"></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>@Html.DisplayFor(modelItem => item.room_id)</td>
+				<td>@Html.DisplayFor(modelItem => item.room_name)</td>
+				<td>@Html.DisplayFor(modelItem => item.room_price)</td>
+				<td>@Html.DisplayFor(modelItem => item.room_quantity)</td>
+				<td>@Html.DisplayFor(modelItem => item.room_capacity)</td>
+				<td>@Html.DisplayFor(modelItem => item.room_image)</td>
+				<td>@Html.DisplayFor(modelItem => item.hotel_id)</td>
+				<td>
+					<a asp-controller="Client" asp-action="Edit" asp-route-id="@item.room_id" class="btn btn-sm btn-primary">Edit</a>
+					<a asp-controller="Client" asp-action="Delete" asp-route-id="@item.room_id" class="btn btn-sm btn-danger">Delete</a>
+				</td>
+			</tr>
+
+		}
+
+	</tbody>
+</table>

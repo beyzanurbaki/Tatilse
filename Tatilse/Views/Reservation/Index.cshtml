@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Reservation>
+<h2>Rezervasyonlar</h2>
+<a href="/Reservation/Create" class="btn btn-primary">Rezervasyon Ekle</a>
+<hr>
+<table class="table table-bordered">
+
+
+	<thead>
+		<tr>
+			<th style="width: 150px;">@Html.DisplayNameFor(m => m.reservation_id)</th>
+			<th>@Html.DisplayNameFor(m => m.start_date)</th>
+			<th>@Html.DisplayNameFor(m => m.end_date)</th>
+			<th>@Html.DisplayNameFor(m => m.client_id)</th>
+			<th>@Html.DisplayNameFor(m => m.room_id)</th>
+			<th style="width: 150px;"></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>@Html.DisplayFor(modelItem => item.reservation_id)</td>
+				<td>@Html.DisplayFor(modelItem => item.start_date)</td>
+				<td>@Html.DisplayFor(modelItem => item.end_date)</td>
+				<td>@Html.DisplayFor(modelItem => item.client_id)</td>
+				<td>@Html.DisplayFor(modelItem => item.room_id)</td>
+				<td>
+					<a asp-controller="Reservation" asp-action="Edit" asp-route-id="@item.reservation_id" class="btn btn-sm btn-primary">Edit</a>
+					<a asp-controller="Reservation" asp-action="Delete" asp-route-id="@item.reservation_id" class="btn btn-sm btn-danger">Delete</a>
+				</td>
+			</tr>
+
+		}
+
+	</tbody>
+</table>

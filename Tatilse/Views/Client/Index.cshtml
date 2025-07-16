@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Client>
+<h2>Müşteriler</h2> 
+<a href="/Client/Create" class="btn btn-primary">Müşteri Ekle</a> 
+<hr> 
+<table class="table table-bordered">
+
+
+	<thead>
+		<tr>
+			<th style ="width: 150px;">@Html.DisplayNameFor(m => m.client_id)</th>
+			<th>@Html.DisplayNameFor(m => m.client_name)</th>
+			<th>@Html.DisplayNameFor(m => m.client_surname)</th>
+			<th>@Html.DisplayNameFor(m => m.client_birthdate)</th>
+			<th>@Html.DisplayNameFor(m => m.client_identity)</th>
+			<th>@Html.DisplayNameFor(m => m.client_phone)</th>
+			<th>@Html.DisplayNameFor(m => m.client_email)</th>
+			<th style="width: 150px;"></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>@Html.DisplayFor(modelItem => item.client_id)</td>
+				<td>@Html.DisplayFor(modelItem => item.client_name)</td>
+				<td>@Html.DisplayFor(modelItem => item.client_surname)</td>
+				<td>@Html.DisplayFor(modelItem => item.client_birthdate)</td>
+				<td>@Html.DisplayFor(modelItem => item.client_identity)</td>
+				<td>@Html.DisplayFor(modelItem => item.client_phone)</td>
+				<td>@Html.DisplayFor(modelItem => item.client_email)</td>
+				<td>
+					<a asp-controller="Client" asp-action="Edit" asp-route-id="@item.client_id" class="btn btn-sm btn-primary">Edit</a>
+					<a asp-controller="Client" asp-action="Delete" asp-route-id="@item.client_id" class="btn btn-sm btn-danger">Delete</a>
+				</td>
+			</tr>
+
+		}
+
+	</tbody>
+</table>

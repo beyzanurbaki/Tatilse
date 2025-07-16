@@ -1,65 +1,59 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Tatilse.Data;
 
 namespace Tatilse.Controllers
 {
-    public class HotelController : Controller
+    public class ClientController : Controller
     {
         private readonly DataContext _context;
-
-        public HotelController(DataContext context)
+        public ClientController(DataContext context)
         {
             _context = context;
         }
-
+        public async Task<IActionResult> Index()
+        {
+            var clients = await _context.Clients.ToListAsync();
+            return View(clients);
+        }
         public IActionResult Create()
         {
             return View();
         }
 
-
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Hotel model)
+        public async Task<IActionResult> Create(Client model)
         {
-            _context.Hotels.Add(model);
+            _context.Clients.Add(model);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> Index()
-        {
-            var hotels = await _context.Hotels.ToListAsync();
-            return View(hotels);
-        }
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
-
             }
 
-            //var hotel = await _context.Hotels.FindAsync(id); //sadece idye göre listelenir
-            var hotel = await _context.Hotels.FirstOrDefaultAsync(h => h.hotel_id == id);  //id hariç başka şeyler de olabilir
-
-            if (hotel == null)
+            var client = await _context.Clients.FirstOrDefaultAsync(h => h.client_id == id);
+            if (client == null)
             {
                 return NotFound();
             }
 
-            return View(hotel);
+            var Client = await _context.Clients.FirstOrDefaultAsync(h => h.client_id == id);
+            return View(client);
+
+
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken] //Yapılacak form saldırılarına karşı koruma
 
-        public async Task<IActionResult> Edit(int id, Hotel model)
+        public async Task<IActionResult> Edit(int id, Client model)
         {
-            if (id != model.hotel_id)
+            if (id != model.client_id)
             {
                 return NotFound();
             }
@@ -74,7 +68,7 @@ namespace Tatilse.Controllers
 
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_context.Hotels.Any(h => h.hotel_id == model.hotel_id))
+                    if (!_context.Clients.Any(h => h.client_id == model.client_id))
                     {
                         return NotFound();
                     }
@@ -101,15 +95,14 @@ namespace Tatilse.Controllers
 
             }
 
-            //var hotel = await _context.Hotels.FirstOrDefaultAsync(h => h.hotel_id == id);
-            var hotel = await _context.Hotels.FindAsync(id);
+            var client = await _context.Clients.FindAsync(id);
 
-            if (hotel == null)
+            if (client == null)
             {
                 return NotFound();
             }
 
-            return View(hotel);
+            return View(client);
         }
 
 
@@ -117,20 +110,17 @@ namespace Tatilse.Controllers
 
         public async Task<IActionResult> Delete([FromForm] int id) //Model Binding [FromForm]
         {
-            //var hotel = await _context.Hotels.FirstOrDefaultAsync(h => h.hotel_id == id);
-            var hotel = await _context.Hotels.FindAsync(id);
-            if (hotel == null)
+            var client = await _context.Clients.FindAsync(id);
+            if (client == null)
             {
                 return NotFound();
 
             }
 
-            _context.Hotels.Remove(hotel);
+            _context.Clients.Remove(client);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
-
     }
-
 }

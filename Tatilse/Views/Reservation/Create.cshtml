@@ -1,0 +1,23 @@
+﻿@model Reservation
+
+<h2>Rezervasyon Yap</h2>
+<hr>
+<form asp-controller="Reservation" asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="room_id" class="form-label">Oda Numarası</label>
+        <select asp-for="room_id" asp-items="ViewBag.Rooms" class="form-control"></select>
+    </div>
+    <div class="mb-3">
+        <label asp-for="client_id" class="form-label">Müşteri Numarası</label>
+        <select asp-for="client_id" asp-items="ViewBag.Clients" class="form-control"></select>
+    </div>
+    <div class="mb-3">
+        <label asp-for="start_date" class="form-label">Giriş Tarihi</label>
+        <input asp-for="start_date" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="end_date" class="form-label">Çıkış Tarihi</label>
+        <input asp-for="end_date" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-secondary">Kaydet</button>
+</form>

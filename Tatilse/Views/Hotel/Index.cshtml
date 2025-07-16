@@ -9,6 +9,7 @@
 			<th style="width: 150px;">@Html.DisplayNameFor(m => m.hotel_name)</th>  @*Sütunlar | Hotel ad*@
 			<th>@Html.DisplayNameFor(m => m.hotel_image)</th>
 			<th >@Html.DisplayNameFor(m => m.hotel_description)</th>
+			<th>@Html.DisplayNameFor(m => m.hotel_price)</th>
 			<th style ="width: 150px;"></th>
 			</tr>
 		</thead>
@@ -16,9 +17,13 @@
 		@foreach (var item in Model) @*var hotel in Model*@
 		{
 			<tr>
-				<td>@Html.DisplayFor(modelItem => item.hotel_name)</td>  @* @hotel.hotel_name  *@
-				<td>@Html.DisplayFor(modelItem => item.hotel_image)</td>  @*Satırlar*@
+				<td>@Html.DisplayFor(modelItem => item.hotel_name)</td>  @* @hootel.tel_name  *@
+				<td>
+				<img src="~/img/@item.hotel_image" alt="Hotel Resmi" style="max-width:200px; max-height:200px;" />
+				</td>
+				@*Satırlar*@
 				<td>@Html.DisplayFor(modelItem => item.hotel_description)</td>
+				<td>@Html.DisplayFor(modelItem => item.hotel_price)</td>
 				<td> 
 					<a asp-controller="Hotel" asp-action="Edit" asp-route-id="@item.hotel_id" class="btn btn-sm btn-primary">Edit</a>
 					<a asp-controller="Hotel" asp-action="Delete" asp-route-id="@item.hotel_id" class="btn btn-sm btn-danger">Delete</a>

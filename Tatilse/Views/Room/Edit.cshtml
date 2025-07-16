@@ -1,0 +1,40 @@
+﻿@model Room
+
+<h2>Oda Güncelle</h2> @* hotel başlığı *@
+<hr> @*çizgi*@
+<form asp-controller="Room" asp-action="Edit" method="post">
+
+	<input type="hidden" asp-for="room_id">
+	<div class="mb-3">
+		<label asp-for="room_name" class="form-label">Adı</label>
+		<input asp-for="room_name" class="form-control" />
+	</div>
+	<div class="mb-3">
+		<label asp-for="room_price" class="form-label">Soyad</label>
+		<input asp-for="room_price" class="form-control" />
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="room_quantity" class="form-label">Doğum Tarihi</label>
+		<input asp-for="room_quantity" class="form-control" />
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="room_capacity" class="form-label">Kimlik</label>
+		<input asp-for="room_capacity" class="form-control" />
+	</div>
+	<div class="mb-3">
+		<label asp-for="room_image" class="form-label">Telefon Numarası</label>
+		<input asp-for="room_image" class="form-control" />
+	</div>
+	<div class="mb-3">
+		<label asp-for="hotel_id" class="form-label">Email</label>
+		<input asp-for="hotel_id" class="form-control" />
+	</div>
+
+	<button type="submit" class="btn btn-secondary">Kaydet</button>
+
+
+
+
+</form>
