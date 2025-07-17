@@ -16,7 +16,12 @@ namespace Tatilse.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var reservations = await _context.Reservations.ToListAsync();
+            var reservations = await _context
+                .Reservations
+                .Include(x => x.client)
+                .Include(x => x.room)
+                .ToListAsync();
+
             return View(reservations);
         }
 

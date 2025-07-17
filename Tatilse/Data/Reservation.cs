@@ -14,8 +14,13 @@ namespace Tatilse.Data
         [Display(Name = "Çıkış Tarihi")]
         public DateOnly end_date { get; set; }
 
+        public Client client { get; set; } = null!;
+
         [Display(Name = "Müşteri No")]
         public int client_id { get; set; }
+
+        public Room room { get; set; } = null!;
+
         [Display(Name = "Giriş Tarihi")]
         public int room_id { get; set; } 
     } 

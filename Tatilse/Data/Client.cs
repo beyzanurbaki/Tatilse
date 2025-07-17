@@ -12,6 +12,14 @@ namespace Tatilse.Data
         public string client_name { get; set; }
 
         [Display(Name = "Soyad")]
+
+        public string NameSurname
+        {
+            get
+            {
+                return this.client_name + " " + this.client_surname;
+            }
+        }
         public string client_surname { get; set; }
 
         [Display(Name = "Doğum Tarihi")]

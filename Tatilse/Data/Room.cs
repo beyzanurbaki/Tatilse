@@ -15,6 +15,7 @@ namespace Tatilse.Data
 
         public string room_image { get; set; }
 
+        public Hotel hotel { get; set; } = null!;
         public int hotel_id { get; set; }
     }
 }
