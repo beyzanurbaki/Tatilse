@@ -18,8 +18,8 @@ namespace Tatilse.Controllers
         {
             var reservations = await _context
                 .Reservations
-                .Include(x => x.client)
-                .Include(x => x.room)
+                //.Include(x => x.client)
+                //.Include(x => x.room)
                 .ToListAsync();
 
             return View(reservations);

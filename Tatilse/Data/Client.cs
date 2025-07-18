@@ -8,6 +8,8 @@ namespace Tatilse.Data
         [Display(Name = "Müşteri Id")]
         public int client_id { get; set; }
 
+        [MaxLength(50, ErrorMessage = "HATA!")]
+
         [Display(Name = "Ad")]
         public string client_name { get; set; }
 
