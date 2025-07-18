@@ -1,0 +1,21 @@
+﻿@model Feature
+
+<h2>Özellik Güncelle</h2> @* hotel başlığı *@
+<hr> @*çizgi*@
+<form asp-controller="Feature" asp-action="Edit" method="post">
+
+	<input type="hidden" asp-for="feature_id">
+	<div class="mb-3">
+		<label asp-for="feature_name" class="form-label">Özellik Adı</label>
+		<input asp-for="feature_name" class="form-control" />
+	</div>
+	<div class="mb-3">
+		<label asp-for="feature_image" class="form-label">Özelliğin Görseli </label>
+		<input asp-for="feature_image" class="form-control" />
+	</div>
+	<button type="submit" class="btn btn-secondary">Kaydet</button>
+
+
+
+
+</form>

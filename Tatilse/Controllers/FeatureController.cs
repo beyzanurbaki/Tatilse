@@ -6,11 +6,13 @@ using Tatilse.Data;
 
 namespace Tatilse.Controllers
 {
-    public class HotelController : Controller
+
+    public class FeatureController : Controller
     {
+
         private readonly DataContext _context;
 
-        public HotelController(DataContext context)
+        public FeatureController(DataContext context)
         {
             _context = context;
         }
@@ -20,26 +22,23 @@ namespace Tatilse.Controllers
             return View();
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Hotel model)
+
+        public async Task<IActionResult> Create(Feature model)
         {
-            _context.Hotels.Add(model);
+            _context.Features.Add(model);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index", "Home");
         }
 
         public async Task<IActionResult> Index()
         {
-            var hotels = await _context
-                .Hotels
-                .Include(h => h.features)
-                .ToListAsync();
-
-
-            return View(hotels);
+            var features = await
+                _context.Features.ToListAsync();
+            return View(features);
         }
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -49,37 +48,31 @@ namespace Tatilse.Controllers
             }
 
             //var hotel = await _context.Hotels.FindAsync(id); //sadece idye göre listelenir
-            var hotel = await _context.Hotels.FirstOrDefaultAsync(h => h.hotel_id == id);  //id hariç başka şeyler de olabilir
+            var feature = await _context.Features.FirstOrDefaultAsync(h => h.feature_id == id);  //id hariç başka şeyler de olabilir
 
-            if (hotel == null)
+            if (feature == null)
             {
                 return NotFound();
             }
 
-            return View(hotel);
+            return View(feature);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken] //Yapılacak form saldırılarına karşı koruma
 
-        public async Task<IActionResult> Edit(int id, Hotel model)
+        public async Task<IActionResult> Edit(int id, Feature model)
         {
-            if (id != model.hotel_id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
                     _context.Update(model);
-                    await _context.SaveChangesAsync(); //yapılan kaydetme işlemini veri tabanına geçirir
+                    await _context.SaveChangesAsync();
                 }
-
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_context.Hotels.Any(h => h.hotel_id == model.hotel_id))
+                    if (!_context.Features.Any(f => f.feature_id == model.feature_id))
                     {
                         return NotFound();
                     }
@@ -88,11 +81,12 @@ namespace Tatilse.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Index", "Hotel");
+                return RedirectToAction("Index", "Feature");
             }
 
             return View(model);
         }
+
 
 
 
@@ -106,15 +100,15 @@ namespace Tatilse.Controllers
 
             }
 
-            //var hotel = await _context.Hotels.FirstOrDefaultAsync(h => h.hotel_id == id);
-            var hotel = await _context.Hotels.FindAsync(id);
+            var feature = await _context.Features.FirstOrDefaultAsync(h => h.feature_id == id);
+           // var feature = await _context.Features.FindAsync(id);
 
-            if (hotel == null)
+            if (feature == null)
             {
                 return NotFound();
             }
 
-            return View(hotel);
+            return View(feature);
         }
 
 
@@ -122,20 +116,17 @@ namespace Tatilse.Controllers
 
         public async Task<IActionResult> Delete([FromForm] int id) //Model Binding [FromForm]
         {
-            //var hotel = await _context.Hotels.FirstOrDefaultAsync(h => h.hotel_id == id);
-            var hotel = await _context.Hotels.FindAsync(id);
-            if (hotel == null)
-            {
-                return NotFound();
+            var feature = await _context.Features.FirstOrDefaultAsync(h => h.feature_id == id);
+          //  var feature = await _context.Features.FindAsync(id);
 
-            }
-
-            _context.Hotels.Remove(hotel);
+            _context.Features.Remove(feature);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Feature");
         }
-
-
     }
 
 }
+
+
+
+

@@ -44,7 +44,8 @@ namespace Tatilse.Migrations
 
                     b.Property<string>("client_name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("client_phone")
                         .IsRequired()
@@ -57,6 +58,29 @@ namespace Tatilse.Migrations
                     b.HasKey("client_id");
 
                     b.ToTable("Clients");
+                });
+
+            modelBuilder.Entity("Tatilse.Data.Feature", b =>
+                {
+                    b.Property<byte>("feature_id")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("feature_image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("feature_name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("hotel_id")
+                        .HasColumnType("int");
+
+                    b.HasKey("feature_id");
+
+                    b.HasIndex("hotel_id");
+
+                    b.ToTable("Features");
                 });
 
             modelBuilder.Entity("Tatilse.Data.Hotel", b =>
@@ -143,6 +167,18 @@ namespace Tatilse.Migrations
                     b.HasKey("room_id");
 
                     b.ToTable("Rooms");
+                });
+
+            modelBuilder.Entity("Tatilse.Data.Feature", b =>
+                {
+                    b.HasOne("Tatilse.Data.Hotel", null)
+                        .WithMany("features")
+                        .HasForeignKey("hotel_id");
+                });
+
+            modelBuilder.Entity("Tatilse.Data.Hotel", b =>
+                {
+                    b.Navigation("features");
                 });
 #pragma warning restore 612, 618
         }

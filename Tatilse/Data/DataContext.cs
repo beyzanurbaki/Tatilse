@@ -13,5 +13,7 @@ namespace Tatilse.Data
         public DbSet<Hotel> Hotels => Set<Hotel>();
         public DbSet<Reservation> Reservations => Set<Reservation>();
         public DbSet<Room> Rooms => Set<Room>();
+
+        public DbSet<Feature> Features => Set<Feature>();
     }
 }

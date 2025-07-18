@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Tatilse.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,7 +17,7 @@ namespace Tatilse.Migrations
                 {
                     client_id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    client_name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    client_name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     client_surname = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     client_birthdate = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     client_identity = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -50,8 +51,8 @@ namespace Tatilse.Migrations
                 {
                     reservation_id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    start_date = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    end_date = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    start_date = table.Column<DateOnly>(type: "date", nullable: false),
+                    end_date = table.Column<DateOnly>(type: "date", nullable: false),
                     client_id = table.Column<int>(type: "int", nullable: false),
                     room_id = table.Column<int>(type: "int", nullable: false)
                 },
@@ -77,6 +78,30 @@ namespace Tatilse.Migrations
                 {
                     table.PrimaryKey("PK_Rooms", x => x.room_id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Features",
+                columns: table => new
+                {
+                    feature_id = table.Column<byte>(type: "tinyint", nullable: false),
+                    feature_name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    feature_image = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    hotel_id = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Features", x => x.feature_id);
+                    table.ForeignKey(
+                        name: "FK_Features_Hotels_hotel_id",
+                        column: x => x.hotel_id,
+                        principalTable: "Hotels",
+                        principalColumn: "hotel_id");
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Features_hotel_id",
+                table: "Features",
+                column: "hotel_id");
         }
 
         /// <inheritdoc />
@@ -86,13 +111,16 @@ namespace Tatilse.Migrations
                 name: "Clients");
 
             migrationBuilder.DropTable(
-                name: "Hotels");
+                name: "Features");
 
             migrationBuilder.DropTable(
                 name: "Reservations");
 
             migrationBuilder.DropTable(
                 name: "Rooms");
+
+            migrationBuilder.DropTable(
+                name: "Hotels");
         }
     }
 }

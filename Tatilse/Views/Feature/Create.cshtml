@@ -1,0 +1,20 @@
+﻿@model Feature
+
+<h2>Özellik Oluştur</h2> @* hotel başlığı *@
+<hr> @*çizgi*@
+<form asp-controller="Feature" asp-action="Create" method="post">
+
+	<div class="mb-3">                                        
+		<label asp-for="feature_name" class="form-label">Özellik Adı</label>
+		<input asp-for="feature_name" class="form-control" />
+	</div>
+	<div class="mb-3">
+		<label asp-for="feature_image" class="form-label">Özelliğin Simgesi</label>
+		<h1>buraya dosya yükleme şekli gelecek!!</h1>
+		<input asp-for="feature_image" class="form-control" />
+	</div>
+
+	<button type="submit" class="btn btn-secondary">Kaydet</button>
+
+
+</form>
