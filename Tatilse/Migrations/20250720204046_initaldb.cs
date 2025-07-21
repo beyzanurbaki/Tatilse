@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Tatilse.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialDB : Migration
+    public partial class initaldb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,16 +17,32 @@ namespace Tatilse.Migrations
                 {
                     client_id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    client_username = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     client_name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     client_surname = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     client_birthdate = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     client_identity = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     client_phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    client_email = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    client_email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    client_passw = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Clients", x => x.client_id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Features",
+                columns: table => new
+                {
+                    feature_id = table.Column<byte>(type: "tinyint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    feature_name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    feature_image = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Features", x => x.feature_id);
                 });
 
             migrationBuilder.CreateTable(
@@ -80,28 +96,33 @@ namespace Tatilse.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Features",
+                name: "FeatureHotel",
                 columns: table => new
                 {
-                    feature_id = table.Column<byte>(type: "tinyint", nullable: false),
-                    feature_name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    feature_image = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    hotel_id = table.Column<int>(type: "int", nullable: true)
+                    Hotelshotel_id = table.Column<int>(type: "int", nullable: false),
+                    featuresfeature_id = table.Column<byte>(type: "tinyint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Features", x => x.feature_id);
+                    table.PrimaryKey("PK_FeatureHotel", x => new { x.Hotelshotel_id, x.featuresfeature_id });
                     table.ForeignKey(
-                        name: "FK_Features_Hotels_hotel_id",
-                        column: x => x.hotel_id,
+                        name: "FK_FeatureHotel_Features_featuresfeature_id",
+                        column: x => x.featuresfeature_id,
+                        principalTable: "Features",
+                        principalColumn: "feature_id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FeatureHotel_Hotels_Hotelshotel_id",
+                        column: x => x.Hotelshotel_id,
                         principalTable: "Hotels",
-                        principalColumn: "hotel_id");
+                        principalColumn: "hotel_id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Features_hotel_id",
-                table: "Features",
-                column: "hotel_id");
+                name: "IX_FeatureHotel_featuresfeature_id",
+                table: "FeatureHotel",
+                column: "featuresfeature_id");
         }
 
         /// <inheritdoc />
@@ -111,13 +132,16 @@ namespace Tatilse.Migrations
                 name: "Clients");
 
             migrationBuilder.DropTable(
-                name: "Features");
+                name: "FeatureHotel");
 
             migrationBuilder.DropTable(
                 name: "Reservations");
 
             migrationBuilder.DropTable(
                 name: "Rooms");
+
+            migrationBuilder.DropTable(
+                name: "Features");
 
             migrationBuilder.DropTable(
                 name: "Hotels");

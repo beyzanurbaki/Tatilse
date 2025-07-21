@@ -11,7 +11,7 @@ namespace Tatilse.Data
 
         public decimal room_price { get; set; }
         public short room_quantity { get; set; }
-        public short room_capacity { get; set; }
+        public short room_max_capacity { get; set; }
 
         public string room_image { get; set; }
 

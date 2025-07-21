@@ -1,0 +1,33 @@
+﻿@model Client
+
+
+<h1> Login</h1>
+<form onsubmit="login(event)">
+	<div class="form-floating mb-3">
+		<input name="client_username" class="form-control" id="client_username" placeholder="name@example.com">
+		<label for="client_username">Kullanıcı Adı</label>
+	</div>
+	<div class="form-floating">
+		<input type="password" name="client_password" class="form-control" id="client_password" placeholder="Password">
+		<label for="client_password">Şifre</label>
+	</div>
+
+	<button type="submit" class="btn btn-success mt-3">Giriş Yap</button>
+</form>
+
+<script>
+	function login(event){
+		event.preventDefault();
+		const formData = new FormData(event.currentTarget);
+		debugger;
+		fetch("/client/login", {
+			body: formData,
+			method: "POST"
+		}).then(res=>{
+			alert("işlem başarılı");
+		})
+		.catch(error=>{
+			alert(error);
+		});
+	}
+</script>

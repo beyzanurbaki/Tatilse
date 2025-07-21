@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Tatilse.Data
 {
@@ -6,8 +7,8 @@ namespace Tatilse.Data
     {
         [Key]
         [Required]
-
         [Display(Name = "Özellik ID")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public byte feature_id { get; set; }
 
         [Required]
@@ -16,5 +17,8 @@ namespace Tatilse.Data
 
         [Display(Name = "Özellik Simgesi")]
         public string feature_image { get; set; }
+
+        public ICollection<Hotel> Hotels { get; set; }
     }
+
 }

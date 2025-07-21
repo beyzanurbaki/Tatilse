@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Tatilse.styles.css" asp-append-version="true" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
 </head>
 <body>
     <header>
@@ -21,12 +23,7 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link navbar-toplink" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link navbar-toplink" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link navbar-toplink" asp-area="" asp-controller="Hotel" asp-action="Index">Hoteller</a>
                         </li>
@@ -37,10 +34,17 @@
                             <a class="nav-link navbar-toplink" asp-area="" asp-controller="Reservation" asp-action="Index">Rezervasyonlar</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link navbar-toplink" asp-area="" asp-controller="Login" asp-action="Index">Giriş Yap</a>
+                            <a class="nav-link navbar-toplink" asp-area="" asp-controller="Room" asp-action="Index">Odalar</a>
                         </li>
+
                         <li class="nav-item">
-                            <a class="nav-link navbar-toplink" asp-area="" asp-controller="Feature" asp-action="Index">Özellik Ekle</a>
+                            <a class="nav-link navbar-toplink" asp-area="" asp-controller="Feature" asp-action="Index">Özellikler</a>
+                        </li>
+                        <li class="nav-item text-center right-align">
+                            <a class="nav-link navbar-toplink" asp-area="" asp-controller="Client" asp-action="Login">
+                                Giriş Yap
+                                <i class='fas fa-user-alt' style='font-size:24px'></i>
+                            </a>
                         </li>
                     </ul>
                 </div>

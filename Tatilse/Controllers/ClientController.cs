@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Tatilse.Data;
+using Tatilse.Models;
 
 namespace Tatilse.Controllers
 {
@@ -11,6 +12,18 @@ namespace Tatilse.Controllers
         {
             _context = context;
         }
+
+        public IActionResult Login()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Login([FromForm]LoginRequest loginRequest)
+        {
+            return Ok();
+            //return View();
+        }
+
         public async Task<IActionResult> Index()
         {
             var clients = await _context.Clients.ToListAsync();

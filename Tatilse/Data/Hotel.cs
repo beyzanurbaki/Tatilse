@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Tatilse.Data
 {
@@ -20,6 +21,10 @@ namespace Tatilse.Data
         public string hotel_image { get; set; }
 
         public ICollection<Feature> features { get; set; } = new List<Feature>();
+
+        [NotMapped]
+        public List<int> SelectedFeatureIds { get; set; }
+
 
     }
 }
