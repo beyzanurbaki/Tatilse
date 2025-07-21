@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Tatilse.Data
 {
@@ -19,7 +20,8 @@ namespace Tatilse.Data
         [Display(Name = "Müşteri No")]
         public int client_id { get; set; }
 
-        //public Room room { get; set; } = null!;
+        [ForeignKey(nameof(room_id))]
+        public Room room { get; set; } = null!;
 
         [Display(Name = "Giriş Tarihi")]
         public int room_id { get; set; } 

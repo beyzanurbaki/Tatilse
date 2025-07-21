@@ -1,10 +1,14 @@
 ﻿@model Room
 
+@{
+	var hotels = ViewBag.Hotels as List<Hotel>;
+}
+
 <h2>Oda oluştur</h2> @* hotel başlığı *@
 <hr> @*çizgi*@
 <form asp-controller="Room" asp-action="Create" method="post">
 
-	<div class="mb-3">                                        
+	<div class="mb-3">
 		<label asp-for="room_name" class="form-label">Oda Adı</label>
 		<input asp-for="room_name" class="form-control" />
 	</div>
@@ -17,7 +21,10 @@
 		<label asp-for="room_quantity" class="form-label">Adet</label>
 		<input asp-for="room_quantity" class="form-control" />
 	</div>
-
+	<div class="mb-3">
+		<label asp-for="room_max_people" class="form-label">Adet</label>
+		<input asp-for="room_max_people" class="form-control" />
+	</div>
 	<div class="mb-3">
 		<label asp-for="room_capacity" class="form-label">Oda Büyüklüğü</label>
 		<input asp-for="room_capacity" class="form-control" />
@@ -28,8 +35,14 @@
 	</div>
 
 	<div class="mb-3">
-	<label asp-for="hotel_id" class="form-label">Hotel No</label>
-	<input asp-for="hotel_id" class="form-control" />
+		<label asp-for="hotel_id" class="form-label">Hotel No</label>
+		<select id="hotel_id" name="hotel_id" class="form-control">
+			@foreach (var hotel in hotels)
+			{
+				<option value="@hotel.hotel_id">@hotel.hotel_name</option>
+			}
+		</select>
+		@* <input asp-for="hotel_id" class="form-control" /> *@
 	</div>
 
 	<button type="submit" class="btn btn-secondary">Kaydet</button>

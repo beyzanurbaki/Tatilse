@@ -16,6 +16,7 @@ namespace Tatilse.Controllers
 
         public IActionResult Create()
         {
+            ViewBag.Hotels = _context.Hotels.ToList();
             return View();
         }
 

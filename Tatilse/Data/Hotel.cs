@@ -20,6 +20,7 @@ namespace Tatilse.Data
         [Display(Name = "Görsel")]
         public string hotel_image { get; set; }
 
+        public ICollection<Room> rooms { get; set; } = new List<Room>();  //bir otelde birden fazla oda bulunabilir
         public ICollection<Feature> features { get; set; } = new List<Feature>();
 
         [NotMapped]
