@@ -26,10 +26,23 @@
 				<td>@Html.DisplayFor(modelItem => item.hotel_price)</td>
 				<td> 
 					<a asp-controller="Hotel" asp-action="Edit" asp-route-id="@item.hotel_id" class="btn btn-sm btn-primary">Edit</a>
-					<a asp-controller="Hotel" asp-action="Delete" asp-route-id="@item.hotel_id" class="btn btn-sm btn-danger">Delete</a>
+					<form method="post" asp-controller="Hotel" asp-action="Delete"
+					style="display:inline" onsubmit="return confirmDelete('@item.hotel_name');">
+					<input type="hidden" name="id" value="@item.hotel_id"/>
+					<button type="submit" class="btn btn-sm btn-danger">Delete</button> 
+					</form>
 				</td>	
 			</tr>
 		}
-	
 		</tbody>
 	</table>
+
+	@section Scripts{
+
+		<script>
+			function confirmDelete(hotel_name){
+				return confirm(hotel_name +"isimli kullanıcıyı silmek ister misiniz?");
+			}
+	</script>
+
+	}

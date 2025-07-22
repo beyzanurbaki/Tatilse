@@ -9,6 +9,8 @@
 		<tr>
 			<th style ="width: 150px;">@Html.DisplayNameFor(m => m.client_id)</th>
 			<th>@Html.DisplayNameFor(m => m.client_name)</th>
+			<th>@Html.DisplayNameFor(m => m.client_username)</th>
+			<th>@Html.DisplayNameFor(m => m.client_passw)</th>
 			<th>@Html.DisplayNameFor(m => m.client_surname)</th>
 			<th>@Html.DisplayNameFor(m => m.client_birthdate)</th>
 			<th>@Html.DisplayNameFor(m => m.client_identity)</th>
@@ -23,6 +25,8 @@
 			<tr>
 				<td>@Html.DisplayFor(modelItem => item.client_id)</td>
 				<td>@Html.DisplayFor(modelItem => item.client_name)</td>
+				<td>@Html.DisplayFor(modelItem => item.client_username)</td>
+				<td>@Html.DisplayFor(modelItem => item.client_passw)</td>
 				<td>@Html.DisplayFor(modelItem => item.client_surname)</td>
 				<td>@Html.DisplayFor(modelItem => item.client_birthdate)</td>
 				<td>@Html.DisplayFor(modelItem => item.client_identity)</td>
@@ -30,11 +34,26 @@
 				<td>@Html.DisplayFor(modelItem => item.client_email)</td>
 				<td>
 					<a asp-controller="Client" asp-action="Edit" asp-route-id="@item.client_id" class="btn btn-sm btn-primary">Edit</a>
-					<a asp-controller="Client" asp-action="Delete" asp-route-id="@item.client_id" class="btn btn-sm btn-danger">Delete</a>
+					<form method="post" asp-controller="Client" asp-action="Delete"
+					style="display:inline;" onsubmit="return confirmDelete('@item.client_name');">
+						<input type="hidden" name="id" value="@item.client_id" />
+						<button type="submit" class="btn btn-sm btn-danger">Delete</button>
+					</form>
 				</td>
 			</tr>
-
 		}
+	
 
 	</tbody>
 </table>
+
+
+@section Scripts {
+	<script>
+		function confirmDelete(client_name) {
+			return confirm(client_name + " isimli kullanıcıyı silmek ister misiniz?");
+		}
+	</script>
+
+
+}

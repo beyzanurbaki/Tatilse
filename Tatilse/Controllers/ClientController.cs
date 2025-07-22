@@ -90,7 +90,7 @@ namespace Tatilse.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Index", "Hotel");
+                return RedirectToAction("Index", "Client");
             }
 
             return View(model);
