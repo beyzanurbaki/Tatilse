@@ -5,6 +5,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllersWithViews(); // Servisler
+builder.Services.AddAuthentication("MyCookieAuth")
+    .AddCookie("MyCookieAuth", options =>
+    {
+        options.LoginPath = "/Client/Login";
+        options.AccessDeniedPath = "/Client/Login";
+        //options.AccessDeniedPath = "/Client/AccessDenied";
+    });
 
 builder.Services.AddSession(options =>
 {
@@ -35,9 +42,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// Session middleware
-app.UseSession();
 
+app.UseSession();
+app.UseAuthentication();
 app.UseAuthorization();
 
 

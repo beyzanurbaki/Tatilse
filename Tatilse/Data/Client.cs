@@ -20,13 +20,13 @@ namespace Tatilse.Data
         public string client_name { get; set; }
 
 
-        public string NameSurname
-        {
-            get
-            {
-                return this.client_name + " " + this.client_surname;
-            }
-        }
+        //public string NameSurname
+        //{
+        //    get
+        //    {
+        //        return this.client_name + " " + this.client_surname;
+        //    }
+        //}
 
         [Display(Name = "Soyad")]
         public string client_surname { get; set; }

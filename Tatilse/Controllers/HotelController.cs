@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Tatilse.Data;
@@ -6,6 +7,8 @@ using Tatilse.Models;
 
 namespace Tatilse.Controllers
 {
+
+    [Authorize(Roles = RoleDefinition.Admin)]
     public class HotelController : Controller
     {
         private readonly DataContext _context;

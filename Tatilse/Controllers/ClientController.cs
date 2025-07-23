@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http; //session işlemleri için
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using Tatilse.Data;
 using Tatilse.Models;
 
@@ -15,67 +18,64 @@ namespace Tatilse.Controllers
             _context = context;
         }
 
+        [AllowAnonymous] 
         public IActionResult Login()
         {
             return View();
         }
 
-        //[HttpPost]
-        //public IActionResult Login([FromForm]LoginRequest loginRequest)
-        //{
-        //    return Ok();
-        //    //return View();
-        //}
-        //[HttpPost]
-
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromForm] LoginRequest loginRequest)
         {
-          
             var client = await _context.Clients
                 .FirstOrDefaultAsync(c =>
                     c.client_username == loginRequest.client_username &&
                     c.client_passw == loginRequest.client_password);
-
+            //HttpContext.User.Identity.Name
             if (client != null)
             {
-                //if (client.isAdmin)
-                //{
-                //    return "admin";
-                //}
-                //else
-                //{
-                //    return "user";
-                //}
-                HttpContext.Session.SetString("client_username", client.client_username);
-                HttpContext.Session.SetString("role", client.isAdmin ? "admin" : "user"); // eğer clientin
-                HttpContext.Session.SetString("fullname", client.client_name + " " + client.client_surname);
+                var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, client.client_username),
+                        new Claim("fullname", client.client_name + " " + client.client_surname),
+                    };
 
+                if (client.isAdmin)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, RoleDefinition.Admin));
+                }
+
+                var identity = new ClaimsIdentity(claims, "MyCookieAuth");
+                var principal = new ClaimsPrincipal(identity);
+                await HttpContext.SignInAsync("MyCookieAuth", principal);
                 return Json(new { success = true, isAdmin = client.isAdmin });
-
             }
 
             return Json(new { success = false, message = "Kullanıcı adı veya şifre hatalı." });
         }
 
-
-        public IActionResult Logout()
+        [Authorize]
+        public async Task<IActionResult> Logout()
         {
-            HttpContext.Session.Clear(); // tüm sessionları sil
+            await HttpContext.SignOutAsync("MyCookieAuth");
             return RedirectToAction("Login", "Client");
         }
 
-
+        [Authorize(Roles = RoleDefinition.Admin)]
         public async Task<IActionResult> Index()
         {
             var clients = await _context.Clients.ToListAsync();
             return View(clients);
         }
+
+        [Authorize(Roles = RoleDefinition.Admin)]
         public IActionResult Create()
         {
             return View();
         }
 
+        [Authorize(Roles = RoleDefinition.Admin)]
         [HttpPost]
         public async Task<IActionResult> Create(Client model)
         {
@@ -84,6 +84,7 @@ namespace Tatilse.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = RoleDefinition.Admin)]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -100,12 +101,11 @@ namespace Tatilse.Controllers
             var Client = await _context.Clients.FirstOrDefaultAsync(h => h.client_id == id);
             return View(client);
 
-
         }
 
         [HttpPost]
+        [Authorize(Roles = RoleDefinition.Admin)]
         [ValidateAntiForgeryToken] //Yapılacak form saldırılarına karşı koruma
-
         public async Task<IActionResult> Edit(int id, Client model)
         {
             if (id != model.client_id)
@@ -141,7 +141,7 @@ namespace Tatilse.Controllers
 
 
         [HttpGet]
-
+        [Authorize(Roles = RoleDefinition.Admin)]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -162,7 +162,7 @@ namespace Tatilse.Controllers
 
 
         [HttpPost]
-
+        [Authorize(Roles = RoleDefinition.Admin)]
         public async Task<IActionResult> Delete([FromForm] int id) //Model Binding [FromForm]
         {
             var client = await _context.Clients.FindAsync(id);

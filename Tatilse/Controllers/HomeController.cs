@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Tatilse.Models;
 
@@ -13,14 +14,15 @@ namespace Tatilse.Controllers
             _logger = logger;
         }
 
+        //[Authorize]
         public IActionResult Index()
         {
-            var username = HttpContext.Session.GetString("client_username");
+            //var username = HttpContext.Session.GetString("client_username");
 
-            if (string.IsNullOrEmpty(username))
-            {
-                return RedirectToAction("Login", "Client");
-            }
+            //if (string.IsNullOrEmpty(username))
+            //{
+            //    return RedirectToAction("Login", "Client");
+            //}
 
             return View();
         }

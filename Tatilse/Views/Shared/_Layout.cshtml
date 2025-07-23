@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Http
 @{
-    var username = Context.Session.GetString("client_username");
+    var username = User.FindFirst("fullname")?.Value;
+
 }
 
 <!DOCTYPE html>
@@ -28,24 +29,27 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+                        @if (User.IsInRole(RoleDefinition.Admin))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link navbar-toplink" asp-area="" asp-controller="Hotel" asp-action="Index">Hoteller</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link navbar-toplink" asp-area="" asp-controller="Client" asp-action="Index">Üyeler</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link navbar-toplink" asp-area="" asp-controller="Reservation" asp-action="Index">Rezervasyonlar</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link navbar-toplink" asp-area="" asp-controller="Room" asp-action="Index">Odalar</a>
+                            </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link navbar-toplink" asp-area="" asp-controller="Hotel" asp-action="Index">Hoteller</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link navbar-toplink" asp-area="" asp-controller="Client" asp-action="Index">Üyeler</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link navbar-toplink" asp-area="" asp-controller="Reservation" asp-action="Index">Rezervasyonlar</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link navbar-toplink" asp-area="" asp-controller="Room" asp-action="Index">Odalar</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link navbar-toplink" asp-area="" asp-controller="Feature" asp-action="Index">Özellikler</a>
+                            </li>
+                        }       
 
-                        <li class="nav-item">
-                            <a class="nav-link navbar-toplink" asp-area="" asp-controller="Feature" asp-action="Index">Özellikler</a>
-                        </li>
-                        @if (!string.IsNullOrEmpty(username))
+                        @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle navbar-toplink" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
