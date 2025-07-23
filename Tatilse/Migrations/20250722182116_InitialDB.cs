@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Tatilse.Migrations
 {
     /// <inheritdoc />
-    public partial class initaldb : Migration
+    public partial class InitialDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -62,40 +62,6 @@ namespace Tatilse.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reservations",
-                columns: table => new
-                {
-                    reservation_id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    start_date = table.Column<DateOnly>(type: "date", nullable: false),
-                    end_date = table.Column<DateOnly>(type: "date", nullable: false),
-                    client_id = table.Column<int>(type: "int", nullable: false),
-                    room_id = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Reservations", x => x.reservation_id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Rooms",
-                columns: table => new
-                {
-                    room_id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    room_name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    room_price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    room_quantity = table.Column<short>(type: "smallint", nullable: false),
-                    room_capacity = table.Column<short>(type: "smallint", nullable: false),
-                    room_image = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    hotel_id = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Rooms", x => x.room_id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "FeatureHotel",
                 columns: table => new
                 {
@@ -119,18 +85,83 @@ namespace Tatilse.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Rooms",
+                columns: table => new
+                {
+                    room_id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    room_name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    room_price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    room_quantity = table.Column<short>(type: "smallint", nullable: false),
+                    room_capacity = table.Column<short>(type: "smallint", nullable: false),
+                    room_max_people = table.Column<short>(type: "smallint", nullable: false),
+                    room_image = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    hotel_id = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Rooms", x => x.room_id);
+                    table.ForeignKey(
+                        name: "FK_Rooms_Hotels_hotel_id",
+                        column: x => x.hotel_id,
+                        principalTable: "Hotels",
+                        principalColumn: "hotel_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Reservations",
+                columns: table => new
+                {
+                    reservation_id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    start_date = table.Column<DateOnly>(type: "date", nullable: false),
+                    end_date = table.Column<DateOnly>(type: "date", nullable: false),
+                    client_id = table.Column<int>(type: "int", nullable: false),
+                    room_id = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reservations", x => x.reservation_id);
+                    table.ForeignKey(
+                        name: "FK_Reservations_Clients_client_id",
+                        column: x => x.client_id,
+                        principalTable: "Clients",
+                        principalColumn: "client_id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Reservations_Rooms_room_id",
+                        column: x => x.room_id,
+                        principalTable: "Rooms",
+                        principalColumn: "room_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_FeatureHotel_featuresfeature_id",
                 table: "FeatureHotel",
                 column: "featuresfeature_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservations_client_id",
+                table: "Reservations",
+                column: "client_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservations_room_id",
+                table: "Reservations",
+                column: "room_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Rooms_hotel_id",
+                table: "Rooms",
+                column: "hotel_id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Clients");
-
             migrationBuilder.DropTable(
                 name: "FeatureHotel");
 
@@ -138,10 +169,13 @@ namespace Tatilse.Migrations
                 name: "Reservations");
 
             migrationBuilder.DropTable(
-                name: "Rooms");
+                name: "Features");
 
             migrationBuilder.DropTable(
-                name: "Features");
+                name: "Clients");
+
+            migrationBuilder.DropTable(
+                name: "Rooms");
 
             migrationBuilder.DropTable(
                 name: "Hotels");

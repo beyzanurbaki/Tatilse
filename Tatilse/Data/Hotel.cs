@@ -5,6 +5,13 @@ namespace Tatilse.Data
 {
     public class Hotel
     {
+
+        public Hotel() { }
+        public Hotel(int hotel_id)
+        {
+            this.hotel_id = hotel_id;
+        }
+
         [Key]
         public int hotel_id { get; set; }
 

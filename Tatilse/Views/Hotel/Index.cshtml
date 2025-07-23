@@ -24,7 +24,8 @@
 				@*Satırlar*@
 				<td>@Html.DisplayFor(modelItem => item.hotel_description)</td>
 				<td>@Html.DisplayFor(modelItem => item.hotel_price)</td>
-				<td> 
+				<td>
+@* 					<a href="/Hotel/Edit" class="btn btn-primary">Hotel Ekle</a> *@
 					<a asp-controller="Hotel" asp-action="Edit" asp-route-id="@item.hotel_id" class="btn btn-sm btn-primary">Edit</a>
 					<form method="post" asp-controller="Hotel" asp-action="Delete"
 					style="display:inline" onsubmit="return confirmDelete('@item.hotel_name');">

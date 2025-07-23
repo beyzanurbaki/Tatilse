@@ -8,12 +8,12 @@ namespace Tatilse.Data
         [Display(Name = "Müşteri Id")]
         public int client_id { get; set; }
 
-        
+
         [Display(Name = "Kullanıcı Adı")]
         [MaxLength(15, ErrorMessage = "15 karakterden fazla şifre tanımlayamazsınız.")]
-    
+
         public string client_username { get; set; }
-       
+
         [MaxLength(50, ErrorMessage = "HATA!")]
 
         [Display(Name = "Ad")]
@@ -45,6 +45,8 @@ namespace Tatilse.Data
         [Required]
 
         [MaxLength(12, ErrorMessage = "12 karakterden fazla şifre tanımlayamazsınız.")]
-        public string client_passw {  get; set; }
+        public string client_passw { get; set; }
+
+        public bool isAdmin { get; set; }
     }
 }

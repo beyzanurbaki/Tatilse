@@ -4,12 +4,12 @@
 <hr>
 <form asp-controller="Reservation" asp-action="Create" method="post">
     <div class="mb-3">
-        <label asp-for="room_id" class="form-label">Oda Numarası</label>
-        <select asp-for="room_id" asp-items="ViewBag.Rooms" class="form-control"></select>
+        <label asp-for="client_id" class="form-label">Müşteri id</label>
+        <input asp-for="client_id" class="form-control" />
     </div>
     <div class="mb-3">
-        <label asp-for="client_id" class="form-label">Müşteri Numarası</label>
-        <select asp-for="client_id" asp-items="ViewBag.Clients" class="form-control"></select>
+        <label asp-for="room_id" class="form-label">Room id</label>
+        <input asp-for="room_id" class="form-control" />
     </div>
     <div class="mb-3">
         <label asp-for="start_date" class="form-label">Giriş Tarihi</label>

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http; //session işlemleri için
 using Tatilse.Data;
 using Tatilse.Models;
+
 
 namespace Tatilse.Controllers
 {
@@ -17,12 +19,51 @@ namespace Tatilse.Controllers
         {
             return View();
         }
+
+        //[HttpPost]
+        //public IActionResult Login([FromForm]LoginRequest loginRequest)
+        //{
+        //    return Ok();
+        //    //return View();
+        //}
+        //[HttpPost]
+
         [HttpPost]
-        public IActionResult Login([FromForm]LoginRequest loginRequest)
+        public async Task<IActionResult> Login([FromForm] LoginRequest loginRequest)
         {
-            return Ok();
-            //return View();
+            if (loginRequest.client_username == "admin" && loginRequest.client_password == "admin1234*")
+            {
+                HttpContext.Session.SetString("client_username", "admin");
+                HttpContext.Session.SetString("role", "admin");
+                HttpContext.Session.SetString("fullname", "Admin"); // eklenen kısım
+                return Json(new { success = true, isAdmin = true });
+            }
+
+            var client = await _context.Clients
+                .FirstOrDefaultAsync(c =>
+                    c.client_username == loginRequest.client_username &&
+                    c.client_passw == loginRequest.client_password);
+
+            if (client != null)
+            {
+                HttpContext.Session.SetString("client_username", client.client_username);
+                HttpContext.Session.SetString("role", "user");
+                HttpContext.Session.SetString("fullname", client.client_name + " " + client.client_surname);
+
+                return Json(new { success = true, isAdmin = false });
+         
+            }
+
+            return Json(new { success = false, message = "Kullanıcı adı veya şifre hatalı." });
         }
+
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear(); // tüm sessionları sil
+            return RedirectToAction("Login", "Client");
+        }
+
 
         public async Task<IActionResult> Index()
         {

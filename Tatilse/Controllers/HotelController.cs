@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Tatilse.Data;
+using Tatilse.Models;
 
 namespace Tatilse.Controllers
 {
@@ -58,53 +59,61 @@ namespace Tatilse.Controllers
 
             if (hotel == null) return NotFound();
 
-            ViewBag.Features = new MultiSelectList(
-                _context.Features.ToList(),
-                "feature_id",
-                "feature_name",
-                hotel.features.Select(f => f.feature_id)
-            );
+            //ViewBag.Features = new MultiSelectList(
+            //    _context.Features.ToList(),
+            //    "feature_id",
+            //    "feature_name",
+            //    hotel.features.Select(f => f.feature_id)
+            //);
 
             return View(hotel);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Hotel model, int[] selectedFeatures)
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(HotelEditDTO hotelEditRequest)
         {
-            if (id != model.hotel_id) return NotFound();
+            //if (id != model.hotel_id)
+            //{
+            //    return NotFound();
+            //}
 
-            var hotelToUpdate = await _context.Hotels
-                .Include(h => h.features)
-                .FirstOrDefaultAsync(h => h.hotel_id == id);
+            if (!_context.Hotels.Any(h => h.hotel_id == hotelEditRequest.hotel_id))
+            {
+                return NotFound();
+            }
 
-            if (hotelToUpdate == null) return NotFound();
+            Hotel hotel = _context.Hotels
+                          .Where(x => x.hotel_id == hotelEditRequest.hotel_id)
+                          .First();
+            //Hotel hotel = new Hotel(hotelEditRequest.hotel_id);
+            //_context.Attach(hotel);
+            hotel.hotel_description = hotelEditRequest.hotel_description;
+            hotel.hotel_price = hotelEditRequest.hotel_price;
+            hotel.hotel_name = hotelEditRequest.hotel_name;
 
             if (ModelState.IsValid)
             {
-                hotelToUpdate.hotel_name = model.hotel_name;
-                hotelToUpdate.hotel_price = model.hotel_price;
-                hotelToUpdate.hotel_description = model.hotel_description;
-                hotelToUpdate.hotel_image = model.hotel_image;
+                try
+                {
+                    //_context.Update(hotel);
+                    await _context.SaveChangesAsync(); //yapılan kaydetme işlemini veri tabanına geçirir
+                    return RedirectToAction("Index", "Hotel");
+                }
 
-                // Güncellenen özellikleri ata
-                hotelToUpdate.features = await _context.Features
-                    .Where(f => selectedFeatures.Contains(f.feature_id))
-                    .ToListAsync();
-
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction("Index");
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    return Conflict(new
+                    {
+                        Message = "Başka birisi tarafından güncellendi."
+                    });
+                }
             }
 
-            ViewBag.Features = new MultiSelectList(
-                _context.Features.ToList(),
-                "feature_id",
-                "feature_name",
-                selectedFeatures
-            );
-
-            return View(model);
+            return Json(new
+            {
+                Message = "Parametreleri kontrol ediniz."
+            });
         }
 
         [HttpGet]

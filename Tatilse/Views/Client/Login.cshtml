@@ -16,18 +16,31 @@
 </form>
 
 <script>
-	function login(event){
+	function login(event) {
 		event.preventDefault();
 		const formData = new FormData(event.currentTarget);
-		debugger;
-		fetch("/client/login", {
+
+		fetch("/Client/Login", {
 			body: formData,
 			method: "POST"
-		}).then(res=>{
-			alert("işlem başarılı");
 		})
-		.catch(error=>{
-			alert(error);
+		.then(res => res.json())
+		.then(data => {
+			if (data.success) { 
+				debugger;
+				if (data.isAdmin) {
+					// Admin paneline yönlendir
+					window.location.href = "/Admin/Dashboard";
+				} else {
+					// Kullanıcı sayfasına yönlendir
+					window.location.href = "/Home/Index";
+				}
+			} else {
+				alert(data.message);
+			}
+		})
+		.catch(err => {
+			alert("Bir hata oluştu: " + err);
 		});
 	}
 </script>

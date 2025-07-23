@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@{
+    var username = Context.Session.GetString("client_username");
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -40,12 +45,27 @@
                         <li class="nav-item">
                             <a class="nav-link navbar-toplink" asp-area="" asp-controller="Feature" asp-action="Index">Özellikler</a>
                         </li>
-                        <li class="nav-item text-center right-align">
-                            <a class="nav-link navbar-toplink" asp-area="" asp-controller="Client" asp-action="Login">
-                                Giriş Yap
-                                <i class='fas fa-user-alt' style='font-size:24px'></i>
-                            </a>
-                        </li>
+                        @if (!string.IsNullOrEmpty(username))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle navbar-toplink" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class='fas fa-user-alt'></i> @username
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Client" asp-action="Logout">Çıkış Yap</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link navbar-toplink" asp-controller="Client" asp-action="Login">
+                                    Giriş Yap <i class='fas fa-user-alt'></i>
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

@@ -12,8 +12,8 @@ using Tatilse.Data;
 namespace Tatilse.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250721055736_max-people")]
-    partial class maxpeople
+    [Migration("20250722182116_InitialDB")]
+    partial class InitialDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -159,6 +159,8 @@ namespace Tatilse.Migrations
 
                     b.HasKey("reservation_id");
 
+                    b.HasIndex("client_id");
+
                     b.HasIndex("room_id");
 
                     b.ToTable("Reservations");
@@ -219,11 +221,19 @@ namespace Tatilse.Migrations
 
             modelBuilder.Entity("Tatilse.Data.Reservation", b =>
                 {
+                    b.HasOne("Tatilse.Data.Client", "client")
+                        .WithMany()
+                        .HasForeignKey("client_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Tatilse.Data.Room", "room")
                         .WithMany("reservations")
                         .HasForeignKey("room_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("client");
 
                     b.Navigation("room");
                 });

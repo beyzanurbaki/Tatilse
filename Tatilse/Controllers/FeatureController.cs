@@ -48,31 +48,37 @@ namespace Tatilse.Controllers
             }
 
             //var hotel = await _context.Hotels.FindAsync(id); //sadece idye göre listelenir
-            var feature = await _context.Features.FirstOrDefaultAsync(h => h.feature_id == id);  //id hariç başka şeyler de olabilir
+            var feature = await _context.Features.FirstOrDefaultAsync(f => f.feature_id == id);  //id hariç başka şeyler de olabilir
 
             if (feature == null)
             {
                 return NotFound();
             }
-
             return View(feature);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken] //Yapılacak form saldırılarına karşı koruma
 
         public async Task<IActionResult> Edit(int id, Feature model)
         {
+            if (id != model.feature_id)
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
                 try
                 {
                     _context.Update(model);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync(); //yapılan kaydetme işlemini veri tabanına geçirir
                 }
+
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_context.Features.Any(f => f.feature_id == model.feature_id))
+                    if (!_context.Features.Any(r => r.feature_id == model.feature_id))
                     {
                         return NotFound();
                     }
