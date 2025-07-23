@@ -31,14 +31,7 @@ namespace Tatilse.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromForm] LoginRequest loginRequest)
         {
-            if (loginRequest.client_username == "admin" && loginRequest.client_password == "admin1234*")
-            {
-                HttpContext.Session.SetString("client_username", "admin");
-                HttpContext.Session.SetString("role", "admin");
-                HttpContext.Session.SetString("fullname", "Admin"); // eklenen kısım
-                return Json(new { success = true, isAdmin = true });
-            }
-
+          
             var client = await _context.Clients
                 .FirstOrDefaultAsync(c =>
                     c.client_username == loginRequest.client_username &&
@@ -46,12 +39,20 @@ namespace Tatilse.Controllers
 
             if (client != null)
             {
+                //if (client.isAdmin)
+                //{
+                //    return "admin";
+                //}
+                //else
+                //{
+                //    return "user";
+                //}
                 HttpContext.Session.SetString("client_username", client.client_username);
-                HttpContext.Session.SetString("role", "user");
+                HttpContext.Session.SetString("role", client.isAdmin ? "admin" : "user"); // eğer clientin
                 HttpContext.Session.SetString("fullname", client.client_name + " " + client.client_surname);
 
-                return Json(new { success = true, isAdmin = false });
-         
+                return Json(new { success = true, isAdmin = client.isAdmin });
+
             }
 
             return Json(new { success = false, message = "Kullanıcı adı veya şifre hatalı." });
