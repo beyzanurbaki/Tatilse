@@ -7,7 +7,7 @@ using Tatilse.Models;
 
 namespace Tatilse.Controllers
 {
-    //[Authorize(Roles = RoleDefinition.Admin)]
+    [Authorize(Roles = RoleDefinition.Admin)]
     public class AdminController : Controller
     {
         private readonly DataContext _context;
@@ -103,6 +103,9 @@ namespace Tatilse.Controllers
             hotel.hotel_description = hotelEditRequest.hotel_description;
             hotel.hotel_price = hotelEditRequest.hotel_price;
             hotel.hotel_name = hotelEditRequest.hotel_name;
+            hotel.hotel_city = hotelEditRequest.hotel_city;
+            hotel.hotel_township = hotelEditRequest.hotel_township;
+
             if (hotelEditRequest.hotel_image != null && hotelEditRequest.hotel_image.Length > 0)
             {
                 // Dosya adını al (örneğin mert.png)

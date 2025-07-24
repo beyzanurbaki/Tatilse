@@ -10,6 +10,8 @@
 			<th>@Html.DisplayNameFor(m => m.hotel_image)</th>
 			<th >@Html.DisplayNameFor(m => m.hotel_description)</th>
 			<th>@Html.DisplayNameFor(m => m.hotel_price)</th>
+			<th>@Html.DisplayNameFor(m => m.hotel_city)</th>
+			<th>@Html.DisplayNameFor(m => m.hotel_township)</th>
 			<th style ="width: 150px;"></th>
 			</tr>
 		</thead>
@@ -24,6 +26,8 @@
 				@*Satırlar*@
 				<td>@Html.DisplayFor(modelItem => item.hotel_description)</td>
 				<td>@Html.DisplayFor(modelItem => item.hotel_price)</td>
+				<td>@Html.DisplayFor(modelItem => item.hotel_city)</td>
+				<td>@Html.DisplayFor(modelItem => item.hotel_township)</td>
 				<td>
 @* 					<a href="/Hotel/Edit" class="btn btn-primary">Hotel Ekle</a> *@
 					<a asp-controller="Admin" asp-action="HotelEdit" asp-route-id="@item.hotel_id" class="btn btn-sm btn-primary">Edit</a>

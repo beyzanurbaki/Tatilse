@@ -24,9 +24,11 @@ namespace Tatilse.Data
         [Display(Name = "Açıklama")]
         public string hotel_description { get; set; }
 
-        //[Display(Name = "İl")]
-        //public string hotel_province {  get; set; }
+        [Display(Name = "İl")]
+        public string hotel_city { get; set; }
 
+        [Display(Name ="İlçe")]
+        public string hotel_township { get; set; }
         [Display(Name = "Görsel")]
         public string hotel_image { get; set; }
 

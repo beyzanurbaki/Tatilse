@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Hotel>
+<h2>Hotelin adı burada yer alıcak </h2>
+<div id="carouselExample" class="carousel slide" style="max-width:700px; max-height:700px">
+    <div class="carousel-inner">
+        
+        <div class="carousel-item active" >
+            <img src="~/img/concorde-de-luxe-resort.png" class="d-block w-100" alt="Fotoğraf1">
+        </div>
+        <div class="carousel-item">
+            <img src="~/img/Elite World Grand İstanbul Küçükyalı Hotel.png" class="d-block w-100" alt="Fotoğraf2">
+        </div>
+        <div class="carousel-item">
+            <img src="~/img/hilton-istanbul-kozyatagi.png" class="d-block w-100" alt="Fotoğraf3">
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+<div>
+
+    <div class="col-md-3">
+        @if (Model != null)
+        {
+            <div class="row">
+
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-3">
+                        <div class="card text-center mb-3 card-design" style="max-width:600px;">
+                            <img src="~/img/@(item.hotel_image ?? "default.jpg")" class="card-img-top" alt="Otel Resmi">
+                            <div class="card-body">
+                                <h5 class="card-text">@Html.DisplayFor(modelItem => item.hotel_name)</h5>
+                                <p class="card-text">@Html.DisplayFor(modelItem => item.hotel_city)</p>
+                                <p class="card-text">@Html.DisplayFor(modelItem => item.hotel_township)</p>
+                                <a href="~/Hotel/HotelDetails" class="d-inline-flex focus-ring py-1 px-2 text-decoration-none border rounded-2 btn btn-primary">@Html.DisplayFor(modelItem => item.hotel_price) TL</a>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+            </div>
+
+        }
+        else
+        {
+            <p>Odalar yüklenemedi.</p>
+        }
+
+    </div>
+
+</div>

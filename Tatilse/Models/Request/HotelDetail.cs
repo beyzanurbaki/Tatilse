@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Tatilse.Models
+namespace Tatilse.Models.Request
 {
-    public class HotelEditDTO
+    public class HotelDetail
     {
         public int hotel_id { get; set; }
 
@@ -22,11 +22,14 @@ namespace Tatilse.Models
         //[Display(Name = "Görsel")]
         //public string hotel_image { get; set; }
         [Display(Name = "Açıklama")]
-        public string hotel_description{ get; set; }
+        public string hotel_description { get; set; }
 
 
 
         [Display(Name = "Görsel")]
         public IFormFile? hotel_image { get; set; }
+
+
     }
 }
+

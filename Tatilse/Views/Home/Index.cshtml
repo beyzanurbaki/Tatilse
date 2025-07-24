@@ -15,12 +15,13 @@
 					<img src="~/img/@(item.hotel_image ?? "default.jpg")" class="card-img-top" alt="Otel Resmi">
 					<div class="card-body">
 						<h5 class="card-text">@Html.DisplayFor(modelItem => item.hotel_name)</h5>
-						<p class="card-text">@Html.DisplayFor(modelItem => item.hotel_description)</p>
-						<a href="~/Admin/HotelIndex" class="btn btn-primary">@Html.DisplayFor(modelItem => item.hotel_price) TL</a>
+						<p class="card-text">@Html.DisplayFor(modelItem => item.hotel_city)</p>
+						<p class="card-text">@Html.DisplayFor(modelItem => item.hotel_township)</p>
+						<a href="~/Hotel/HotelDetails" class="d-inline-flex focus-ring py-1 px-2 text-decoration-none border rounded-2 btn btn-primary">@Html.DisplayFor(modelItem => item.hotel_price) TL</a>
 					</div>
 				</div>
 			</div>
-
+			 
 		}
 	</div>
 
