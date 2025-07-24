@@ -1,8 +1,31 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<Hotel>
+
+@{
+	ViewData["Title"] = "Tatil bizden sorulur!"; @*Sekme başlığı*@
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@if (Model != null)
+{
+	<div class="row">
+
+		@foreach (var item in Model)
+		{
+			<div class="col-md-3">
+				<div class="card text-center mb-3 card-design" style="max-width:600px;">
+					<img src="~/img/@(item.hotel_image ?? "default.jpg")" class="card-img-top" alt="Otel Resmi">
+					<div class="card-body">
+						<h5 class="card-text">@Html.DisplayFor(modelItem => item.hotel_name)</h5>
+						<p class="card-text">@Html.DisplayFor(modelItem => item.hotel_description)</p>
+						<a href="~/Admin/HotelIndex" class="btn btn-primary">@Html.DisplayFor(modelItem => item.hotel_price) TL</a>
+					</div>
+				</div>
+			</div>
+
+		}
+	</div>
+
+}
+else
+{
+	<p>Hotel listesi yüklenemedi.</p>
+}

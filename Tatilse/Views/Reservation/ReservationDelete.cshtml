@@ -3,7 +3,7 @@
 <p>
 	<b>@Model.hotel_name</b> isimli hoteli silmek istiyor musunuz?
 </p>
-<form asp-action="Delete" method="post">
+<form asp-action="ReservationDelete" method="post">
 	<input type="hidden" name="id" value="@Model.hotel_id" />
 	<button type="submit" class="btn btn-danger">Evet</button>
 	<a asp-action="Index" class="btn btn-primary">Hayır</a>

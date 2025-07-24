@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<Hotel>
 <h2>Hoteller</h2> @* hotel başlığı *@
-<a href="/Admin/Create" class="btn btn-primary">Hotel Ekle</a> 
+<a href="/Admin/HotelCreate" class="btn btn-primary">Hotel Ekle</a> 
 <hr> @*çizgi*@
 	<table class="table table-bordered"> @*karelere bölünmüş tablo görünümü için gerekli class*@
 	
@@ -26,8 +26,8 @@
 				<td>@Html.DisplayFor(modelItem => item.hotel_price)</td>
 				<td>
 @* 					<a href="/Hotel/Edit" class="btn btn-primary">Hotel Ekle</a> *@
-					<a asp-controller="Admin" asp-action="Edit" asp-route-id="@item.hotel_id" class="btn btn-sm btn-primary">Edit</a>
-					<form method="post" asp-controller="Admin" asp-action="Delete"
+					<a asp-controller="Admin" asp-action="HotelEdit" asp-route-id="@item.hotel_id" class="btn btn-sm btn-primary">Edit</a>
+					<form method="post" asp-controller="Admin" asp-action="HotelDelete"
 					style="display:inline" onsubmit="return confirmDelete('@item.hotel_name');">
 					<input type="hidden" name="id" value="@item.hotel_id"/>
 					<button type="submit" class="btn btn-sm btn-danger">Delete</button> 

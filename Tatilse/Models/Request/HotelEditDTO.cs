@@ -18,7 +18,7 @@ namespace Tatilse.Models
         //[Display(Name = "Görsel")]
         //public string hotel_image { get; set; }
 
-       // [Display(Name = "Görsel")]
-     //   public IFormFile? hotel_image { get; set; }
+        [Display(Name = "Görsel")]
+        public IFormFile? hotel_image { get; set; }
     }
 }

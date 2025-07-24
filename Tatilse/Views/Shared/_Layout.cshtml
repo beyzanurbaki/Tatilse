@@ -32,13 +32,13 @@
                         @if (User.IsInRole(RoleDefinition.Admin))
                         {
                             <li class="nav-item">
-                                <a class="nav-link navbar-toplink" asp-area="" asp-controller="Hotel" asp-action="Index">Hoteller</a>
+                                <a class="nav-link navbar-toplink" asp-area="" asp-controller="Admin" asp-action="HotelIndex">Hoteller</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link navbar-toplink" asp-area="" asp-controller="Client" asp-action="Index">Üyeler</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link navbar-toplink" asp-area="" asp-controller="Reservation" asp-action="Index">Rezervasyonlar</a>
+                                <a class="nav-link navbar-toplink" asp-area="" asp-controller="Admin" asp-action="ReservationIndex">Rezervasyonlar</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link navbar-toplink" asp-area="" asp-controller="Room" asp-action="Index">Odalar</a>

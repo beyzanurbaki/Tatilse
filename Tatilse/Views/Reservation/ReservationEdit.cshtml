@@ -1,0 +1,32 @@
+﻿@model Reservation
+
+<h2>Hotel Güncelle</h2> @* hotel başlığı *@
+<hr> @*çizgi*@
+<form asp-controller="Admin" asp-action="ReservationEdit" method="post">
+
+	<input type="hidden" asp-for="reservation_id"> 
+	<div class="mb-3">                                        
+		<label asp-for="client_id" class="form-label">Hotel Adı</label>
+		<input asp-for="client_id" class="form-control"/>
+	</div>
+	<div class="mb-3">
+		<label asp-for="room_id" class="form-label">Hotel Fiyatı</label>
+		<input asp-for="room_id" class="form-control" />
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="start_date" class="form-label">Hotel Açıklaması</label>
+		<input asp-for="start_date" class="form-control" />
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="end_date" class="form-label">Hotel Fotoğrafı</label>
+		<input asp-for="end_date" class="form-control" />
+	</div>
+
+	<button type="submit" class="btn btn-secondary">Kaydet</button>
+
+
+
+
+</form>

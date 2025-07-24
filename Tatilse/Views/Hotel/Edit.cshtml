@@ -34,7 +34,7 @@
 		event.preventDefault();
 		const formData = new FormData(event.currentTarget);
 		debugger;
-		fetch("/Hotel/Edit", {
+		fetch("/Admin/Edit", {
 			body: formData,
 			method: "POST"
 		}).then(res=>{

@@ -1,6 +1,8 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
+using Tatilse.Data;
 using Tatilse.Models;
 
 namespace Tatilse.Controllers
@@ -8,24 +10,33 @@ namespace Tatilse.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly DataContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, DataContext context)
         {
+            _context = context;
             _logger = logger;
         }
+        public async Task<IActionResult> Index()
+        {
+            var hotels = await _context.Hotels.ToListAsync();
+
+            return View(hotels);
+        }
+
 
         //[Authorize]
-        public IActionResult Index()
-        {
-            //var username = HttpContext.Session.GetString("client_username");
+        //public IActionResult Index()
+        //{
+        //    //var username = HttpContext.Session.GetString("client_username");
 
-            //if (string.IsNullOrEmpty(username))
-            //{
-            //    return RedirectToAction("Login", "Client");
-            //}
+        //    //if (string.IsNullOrEmpty(username))
+        //    //{
+        //    //    return RedirectToAction("Login", "Client");
+        //    //}
 
-            return View();
-        }
+        //    return View();
+        //}
 
         public IActionResult Privacy()
         {

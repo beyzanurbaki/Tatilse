@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<Reservation>
 <h2>Rezervasyonlar</h2>
-<a href="/Reservation/Create" class="btn btn-primary">Rezervasyon Ekle</a>
+<a href="/Admin/ReservationCreate" class="btn btn-primary">Rezervasyon Ekle</a>
 <hr>
 <table class="table table-bordered">
 
@@ -25,8 +25,8 @@
 				<td>@Html.DisplayFor(modelItem => item.client_id)</td>
 				<td>@Html.DisplayFor(modelItem => item.room_id)</td>
 				<td>
-					<a asp-controller="Reservation" asp-action="Edit" asp-route-id="@item.reservation_id" class="btn btn-sm btn-primary">Edit</a>
-					<a asp-controller="Reservation" asp-action="Delete" asp-route-id="@item.reservation_id" class="btn btn-sm btn-danger">Delete</a>
+					<a asp-controller="Admin" asp-action="ReservationEdit" asp-route-id="@item.reservation_id" class="btn btn-sm btn-primary">Edit</a>
+					<a asp-controller="Admin" asp-action="ReservationDelete" asp-route-id="@item.reservation_id" class="btn btn-sm btn-danger">Delete</a>
 				</td>
 			</tr>
 

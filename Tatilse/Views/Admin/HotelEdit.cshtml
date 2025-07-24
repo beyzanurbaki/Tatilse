@@ -1,12 +1,13 @@
 ﻿@model Hotel
 
-<h2>Hotel Ekle</h2> @* hotel başlığı *@
+<h2>Hotel Güncelle</h2> @* hotel başlığı *@
 <hr> @*çizgi*@
-<form asp-controller="Hotel" asp-action="Create" method="post">
+<form onsubmit="edit(event)">
 
-	<div class="mb-3">                                        
+	<input type="hidden" asp-for="hotel_id">
+	<div class="mb-3">
 		<label asp-for="hotel_name" class="form-label">Hotel Adı</label>
-		<input asp-for="hotel_name" class="form-control"/>
+		<input asp-for="hotel_name" class="form-control" />
 	</div>
 	<div class="mb-3">
 		<label asp-for="hotel_price" class="form-label">Hotel Fiyatı</label>
@@ -20,12 +21,27 @@
 
 	<div class="mb-3">
 		<label asp-for="hotel_image" class="form-label">Hotel Fotoğrafı</label>
-		<input asp-for="hotel_image" class="form-control" />
+		<input type="file" asp-for="hotel_image" class="form-control" />
 	</div>
 
+	<a href=""></a>
 	<button type="submit" class="btn btn-secondary">Kaydet</button>
-
-
-
-
 </form>
+
+
+<script>
+	function edit(event){
+		event.preventDefault();
+		const formData = new FormData(event.currentTarget);
+		debugger;
+		fetch("/Admin/HotelEdit", {
+			body: formData,
+			method: "POST"
+		}).then(res=>{
+			alert("işlem başarılı");
+		})
+		.catch(error=>{
+			alert(error);
+		});
+	}
+</script>
