@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Tatilse.Data;
+using Tatilse.Models;
 
 namespace Tatilse.Controllers
 {
-
+    [Authorize(Roles = RoleDefinition.Admin)]
     public class FeatureController : Controller
     {
 
@@ -44,20 +47,18 @@ namespace Tatilse.Controllers
             if (id == null)
             {
                 return NotFound();
-
             }
 
-            //var hotel = await _context.Hotels.FindAsync(id); //sadece idye göre listelenir
-            var feature = await _context.Features.FirstOrDefaultAsync(f => f.feature_id == id);  //id hariç başka şeyler de olabilir
-
+            var feature = await _context.Features.FirstOrDefaultAsync(f => f.feature_id == id);
             if (feature == null)
             {
                 return NotFound();
             }
+
+            var Feature = await _context.Features.FirstOrDefaultAsync(f =>f.feature_id == id);
             return View(feature);
+
         }
-
-
         [HttpPost]
         [ValidateAntiForgeryToken] //Yapılacak form saldırılarına karşı koruma
 
@@ -70,29 +71,33 @@ namespace Tatilse.Controllers
 
             if (ModelState.IsValid)
             {
+
                 try
                 {
                     _context.Update(model);
-                    await _context.SaveChangesAsync(); //yapılan kaydetme işlemini veri tabanına geçirir
+                    await _context.SaveChangesAsync();
+
                 }
 
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_context.Features.Any(r => r.feature_id == model.feature_id))
+                    if (!_context.Features.Any(f => f.feature_id == model.feature_id))
                     {
                         return NotFound();
                     }
+
                     else
                     {
                         throw;
                     }
+
                 }
-                return RedirectToAction("Index", "Feature");
+                return RedirectToAction("Index","Feature");
+
             }
 
             return View(model);
         }
-
 
 
 
@@ -106,7 +111,7 @@ namespace Tatilse.Controllers
 
             }
 
-            var feature = await _context.Features.FirstOrDefaultAsync(h => h.feature_id == id);
+            var feature = await _context.Features.FirstOrDefaultAsync(f => f.feature_id == id);
            // var feature = await _context.Features.FindAsync(id);
 
             if (feature == null)
@@ -122,7 +127,7 @@ namespace Tatilse.Controllers
 
         public async Task<IActionResult> Delete([FromForm] int id) //Model Binding [FromForm]
         {
-            var feature = await _context.Features.FirstOrDefaultAsync(h => h.feature_id == id);
+            var feature = await _context.Features.FirstOrDefaultAsync(f => f.feature_id == id);
           //  var feature = await _context.Features.FindAsync(id);
 
             _context.Features.Remove(feature);

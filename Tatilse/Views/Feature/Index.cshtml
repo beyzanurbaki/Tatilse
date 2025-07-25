@@ -9,7 +9,7 @@
 		<tr>
 			<th style ="width: 150px;">@Html.DisplayNameFor(m => m.feature_id)</th>
 			<th>@Html.DisplayNameFor(m => m.feature_name)</th>
-			<th>@Html.DisplayNameFor(m => m.feature_image)</th>
+@* 			<th>@Html.DisplayNameFor(m => m.feature_image)</th> *@
 			<th style="width: 150px;"></th>
 		</tr>
 	</thead>
@@ -19,7 +19,7 @@
 			<tr>
 				<td>@Html.DisplayFor(modelItem => item.feature_id)</td>
 				<td>@Html.DisplayFor(modelItem => item.feature_name)</td>
-				<td>@Html.DisplayFor(modelItem => item.feature_image)</td>
+@* 				<td>@Html.DisplayFor(modelItem => item.feature_image)</td> *@
 				<td>
 					<a asp-controller="Feature" asp-action="Edit" asp-route-id="@item.feature_id" class="btn btn-sm btn-primary">Edit</a>
 					<a asp-controller="Feature" asp-action="Delete" asp-route-id="@item.feature_id" class="btn btn-sm btn-danger">Delete</a>

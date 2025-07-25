@@ -108,7 +108,6 @@ namespace Tatilse.Controllers
 
             if (hotelEditRequest.hotel_image != null && hotelEditRequest.hotel_image.Length > 0)
             {
-                // Dosya adını al (örneğin mert.png)
                 //var fileName = Path.GetFileName(hotel.hotel_image.FileName);
                 var extension = Path.GetExtension(hotelEditRequest.hotel_image.FileName); // .png
 
@@ -120,9 +119,6 @@ namespace Tatilse.Controllers
                 {
                     await hotelEditRequest.hotel_image.CopyToAsync(stream);
                 }
-
-                // Veritabanına kaydedilecek dosya adı (örneğin: mert.png)
-                //hotel.hotel_image = fileName;
             }
 
             if (ModelState.IsValid)
