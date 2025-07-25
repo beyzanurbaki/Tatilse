@@ -66,10 +66,12 @@ namespace Tatilse.Controllers
 
             if (ModelState.IsValid)
             {
+
                 try
                 {
                     _context.Update(model);
-                    await _context.SaveChangesAsync(); //yapılan kaydetme işlemini veri tabanına geçirir
+                    await _context.SaveChangesAsync();
+
                 }
 
                 catch (DbUpdateConcurrencyException)
@@ -78,12 +80,15 @@ namespace Tatilse.Controllers
                     {
                         return NotFound();
                     }
+
                     else
                     {
                         throw;
                     }
+
                 }
                 return RedirectToAction("Index", "Room");
+
             }
 
             return View(model);
@@ -125,7 +130,7 @@ namespace Tatilse.Controllers
 
             _context.Rooms.Remove(room);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Room");
         }
 
 
