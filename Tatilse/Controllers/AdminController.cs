@@ -235,54 +235,66 @@ namespace Tatilse.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ReservationEdit(int id, Reservation model)
+        public async Task<IActionResult> ReservationEdit(int id, ReservationEditDTO model)
         {
-            if (id != model.reservation_id) return NotFound();
-
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(model);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!_context.Reservations.Any(r => r.reservation_id == model.reservation_id))
-                        return NotFound();
-                    else
-                        throw;
-                }
-                return RedirectToAction("ReservationIndex");
+                ViewData["Clients"] = new SelectList(_context.Clients, "client_id", "client_name", model.client_id);
+                ViewData["Rooms"] = new SelectList(_context.Rooms, "room_id", "room_name", model.room_id);
+                return View(model);
             }
 
-            return View(model);
+            var reservation = await _context.Reservations.FindAsync(id);
+            if (reservation == null) return NotFound();
+
+            reservation.start_date = model.start_date;
+            reservation.end_date = model.end_date;
+            reservation.client_id = model.client_id;
+            reservation.room_id = model.room_id;
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction("ReservationIndex");
         }
 
 
+
         [HttpGet]
+
         public async Task<IActionResult> ReservationDelete(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
 
-            var reservation = await _context.Reservations.FirstOrDefaultAsync(r => r.reservation_id == id);
-            if (reservation == null) return NotFound();
+            }
+
+            var reservation = await _context.Reservations.FindAsync(id);
+
+            if (reservation == null)
+            {
+                return NotFound();
+            }
 
             return View(reservation);
         }
 
-        [HttpPost, ActionName("ReservationDelete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ReservationDeleteConfirmed(int id)
+
+        [HttpPost]
+
+        public async Task<IActionResult> ReservationDelete([FromForm] int id) //Model Binding [FromForm]
         {
             var reservation = await _context.Reservations.FindAsync(id);
-            if (reservation == null) return NotFound();
+            if (reservation == null)
+            {
+                return NotFound();
+
+            }
 
             _context.Reservations.Remove(reservation);
             await _context.SaveChangesAsync();
-
-            return RedirectToAction("ReservationIndex");
+            return RedirectToAction("ReservationIndex", "Admin");
         }
+
     }
 
 

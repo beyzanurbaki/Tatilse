@@ -1,32 +1,25 @@
 ﻿@model Reservation
 
-<h2>Hotel Güncelle</h2> @* hotel başlığı *@
-<hr> @*çizgi*@
-<form asp-controller="Admin" asp-action="ReservationEdit" method="post">
+<h2>Rezervasyon Güncelle</h2>
 
-	<input type="hidden" asp-for="reservation_id"> 
-	<div class="mb-3">                                        
-		<label asp-for="client_id" class="form-label">Hotel Adı</label>
-		<input asp-for="client_id" class="form-control"/>
-	</div>
-	<div class="mb-3">
-		<label asp-for="room_id" class="form-label">Hotel Fiyatı</label>
-		<input asp-for="room_id" class="form-control" />
-	</div>
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-	<div class="mb-3">
-		<label asp-for="start_date" class="form-label">Hotel Açıklaması</label>
-		<input asp-for="start_date" class="form-control" />
-	</div>
+<form asp-action="ReservationEdit" method="post">
+    <input type="hidden" asp-for="reservation_id" />
 
-	<div class="mb-3">
-		<label asp-for="end_date" class="form-label">Hotel Fotoğrafı</label>
-		<input asp-for="end_date" class="form-control" />
-	</div>
+    <label asp-for="start_date"></label>
+    <input asp-for="start_date" class="form-control" />
+    <span asp-validation-for="start_date" class="text-danger"></span>
 
-	<button type="submit" class="btn btn-secondary">Kaydet</button>
+    <label asp-for="end_date"></label>
+    <input asp-for="end_date" class="form-control" />
+    <span asp-validation-for="end_date" class="text-danger"></span>
 
+    <label>Müşteri</label>
+    <select asp-for="client_id" asp-items="ViewBag.Clients" class="form-control"></select>
 
+    <label>Oda</label>
+    <select asp-for="room_id" asp-items="ViewBag.Rooms" class="form-control"></select>
 
-
+    <button type="submit" class="btn btn-success">Kaydet</button>
 </form>

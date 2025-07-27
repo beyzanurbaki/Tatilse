@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc; // controllerdan kalıtım alması için
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Tatilse.Data;
+using Tatilse.Models.Request;
 
 namespace Tatilse.Controllers
 {
@@ -28,72 +30,64 @@ namespace Tatilse.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("Index", "Room");
         }
-
         public async Task<IActionResult> Index()
         {
-            var rooms = await _context.Rooms.ToListAsync();
+            var rooms = await _context.Rooms.Include(r => r.hotel).ToListAsync(); 
             return View(rooms);
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
+            var room = await _context.Rooms.FindAsync(id);
+            if (room == null) return NotFound();
+
+            var hotels = await _context.Hotels.ToListAsync();
+
+            var dto = new RoomEditDTO
             {
-                return NotFound();
-            }
+                room_id = room.room_id,
+                room_name = room.room_name,
+                room_price = room.room_price,
+                room_quantity = room.room_quantity,
+                room_capacity = room.room_capacity,
+                room_max_people = room.room_max_people,
+                room_image = room.room_image,
+                hotel_id = room.hotel_id
+            };
 
-            var room = await _context.Rooms.FirstOrDefaultAsync(r => r.room_id == id);
-            if (room == null)
-            {
-                return NotFound();
-            }
+            ViewBag.Hotels = new SelectList(hotels, "hotel_id", "hotel_name", dto.hotel_id);
 
-            var Room = await _context.Rooms.FirstOrDefaultAsync(r => r.room_id == id);
-            return View(room);
-
-
+            return View(dto); 
         }
+
+
 
         [HttpPost]
-        [ValidateAntiForgeryToken] //Yapılacak form saldırılarına karşı koruma
-
-        public async Task<IActionResult> Edit(int id, Room model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, RoomEditDTO model)
         {
-            if (id != model.room_id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
 
-                try
-                {
-                    _context.Update(model);
-                    await _context.SaveChangesAsync();
-
-                }
-
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!_context.Rooms.Any(r => r.room_id == model.room_id))
-                    {
-                        return NotFound();
-                    }
-
-                    else
-                    {
-                        throw;
-                    }
-
-                }
-                return RedirectToAction("Index", "Room");
-
+                ViewData["Hotels"] = new SelectList(_context.Hotels, "hotel_id", "hotel_name", model.hotel_id);
+                return View(model);
             }
 
-            return View(model);
+            var room = await _context.Rooms.FindAsync(id);
+            if (room == null) return NotFound();
+
+            room.room_name = model.room_name;
+            room.room_price = model.room_price;
+            room.room_quantity = model.room_quantity;
+            room.room_capacity = model.room_capacity;
+            room.room_max_people = model.room_max_people;
+            room.room_image = model.room_image;
+            room.hotel_id = model.hotel_id;
+
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index" , "Room");
         }
-
 
 
         [HttpGet]
@@ -115,6 +109,8 @@ namespace Tatilse.Controllers
 
             return View(room);
         }
+
+
 
 
         [HttpPost]
