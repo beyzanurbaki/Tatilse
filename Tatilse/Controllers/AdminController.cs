@@ -100,7 +100,8 @@ namespace Tatilse.Controllers
                 hotel_township = hotel.hotel_township,
                 hotel_price = hotel.hotel_price,
                 hotel_description = hotel.hotel_description,
-                SelectedFeatureIds = hotel.features.Select(f =>f.feature_id).ToArray()
+                SelectedFeatureIds = hotel.features.Select(f => f.feature_id.ToString()).ToArray()
+
             };
 
             ViewBag.Features = new MultiSelectList(_context.Features, "feature_id", "feature_name", model.SelectedFeatureIds);
@@ -148,8 +149,10 @@ namespace Tatilse.Controllers
                 }
 
                 // Özellikler güncelleniyor
+                var selectedFeatureIdsByte = model.SelectedFeatureIds.Select(s => byte.Parse(s)).ToList();
+
                 var selectedFeatures = await _context.Features
-                    .Where(f => model.SelectedFeatureIds.Contains(f.feature_id))
+                    .Where(f => selectedFeatureIdsByte.Contains(f.feature_id))
                     .ToListAsync();
 
                 hotel.features.Clear();

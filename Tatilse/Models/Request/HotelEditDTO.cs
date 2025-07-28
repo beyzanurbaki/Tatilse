@@ -30,6 +30,6 @@ namespace Tatilse.Models
         public IFormFile? hotel_image { get; set; }
 
         [Display(Name = "Özellikler")]
-        public byte[] SelectedFeatureIds { get; set; } = new byte[0];
+        public string[] SelectedFeatureIds { get; set; } = new string[0];
     }
 }
