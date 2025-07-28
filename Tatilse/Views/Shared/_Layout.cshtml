@@ -1,9 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Http
 @{
     var username = User.FindFirst("fullname")?.Value;
-
 }
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,14 +12,13 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Tatilse.styles.css" asp-append-version="true" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-
 </head>
 <body>
     <header>
         <nav class="navbar-toplink navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid ">
+            <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                <img src="~/img/Logo2.png" height="80px" width="80px"/>
+                    <img src="~/img/Logo2.png" height="80px" width="80px" />
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -43,12 +40,10 @@
                             <li class="nav-item">
                                 <a class="nav-link navbar-toplink" asp-area="" asp-controller="Room" asp-action="Index">Odalar</a>
                             </li>
-
                             <li class="nav-item">
                                 <a class="nav-link navbar-toplink" asp-area="" asp-controller="Feature" asp-action="Index">Özellikler</a>
                             </li>
-                        }       
-
+                        }
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item dropdown">
@@ -75,13 +70,37 @@
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container mt-4">
+        <form onsubmit="search(event)" class="row g-2 align-items-center">
+            <div class="col-md-3">
+                <input type="text" name="hotelName" class="form-control" placeholder="Otel adı" />
+            </div>
+            <div class="col-md-2">
+                <input type="date" name="startDate" class="form-control" />
+            </div>
+            <div class="col-md-2">
+                <input type="date" name="endDate" class="form-control" />
+            </div>
+            <div class="col-md-2">
+                <input type="number" name="guestCount" class="form-control" min="1" placeholder="Kişi sayısı" />
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-outline-primary w-100">Ara</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="container mt-4">
+        <div id="search-results">
+            <!-- Sonuçlar buraya yüklenecek -->
+        </div>
+
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted mt-5">
         <div class="container">
             &copy; 2025 - Tatilse - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
@@ -92,3 +111,24 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+
+<script>
+      function search(event) {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+
+        fetch("/Hotel/Search", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.text()) // HTML olarak al
+        .then(html => {
+            document.getElementById("search-results").innerHTML = html;
+        })
+        .catch(error => {
+            alert("Bir hata oluştu: " + error);
+        });
+    }
+
+</script>

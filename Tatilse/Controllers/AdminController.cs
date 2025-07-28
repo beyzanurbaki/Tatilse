@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Tatilse.Data;
 using Tatilse.Models;
-
 namespace Tatilse.Controllers
 {
     [Authorize(Roles = RoleDefinition.Admin)]
@@ -36,13 +35,31 @@ namespace Tatilse.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> HotelCreate(Hotel model, int[] selectedFeatures)
+        public async Task<IActionResult> HotelCreate(Hotel model, IFormFile imageFile, int[] SelectedFeatureIds)
         {
-            var selected = await _context.Features
-                                         .Where(f => selectedFeatures.Contains(f.feature_id))
-                                         .ToListAsync();
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                var extension = Path.GetExtension(imageFile.FileName);
+                var fileName = $"{model.hotel_name}{extension}";
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", fileName);
 
-            model.features = selected;
+                using (var stream = new FileStream(path, FileMode.OpenOrCreate))
+                {
+                    await imageFile.CopyToAsync(stream);
+                }
+
+                model.hotel_image = fileName; // ❗ görsel ismini veritabanına yaz
+            }
+
+            // Özellikler
+            if (SelectedFeatureIds != null && SelectedFeatureIds.Length > 0)
+            {
+                var features = await _context.Features
+                    .Where(f => SelectedFeatureIds.Contains(f.feature_id))
+                    .ToListAsync();
+
+                model.features = features;
+            }
 
             _context.Hotels.Add(model);
             await _context.SaveChangesAsync();
@@ -50,99 +67,110 @@ namespace Tatilse.Controllers
             return RedirectToAction("HotelIndex");
         }
 
+
+
+
+        // GET: HotelIndex
         public async Task<IActionResult> HotelIndex()
         {
-            var hotels = await _context
-                .Hotels
+            var hotels = await _context.Hotels
                 .Include(h => h.features)
                 .ToListAsync();
 
             return View(hotels);
         }
 
+        // GET: HotelEdit
         public async Task<IActionResult> HotelEdit(int? id)
         {
             if (id == null) return NotFound();
 
-            var hotel = await _context
-                .Hotels
+            var hotel = await _context.Hotels
                 .Include(h => h.features)
                 .FirstOrDefaultAsync(h => h.hotel_id == id);
 
             if (hotel == null) return NotFound();
 
-            //ViewBag.Features = new MultiSelectList(
-            //    _context.Features.ToList(),
-            //    "feature_id",
-            //    "feature_name",
-            //    hotel.features.Select(f => f.feature_id)
-            //);
+            // DTO oluştur ve verileri doldur
+            var model = new HotelEditDTO
+            {
+                hotel_id = hotel.hotel_id,
+                hotel_name = hotel.hotel_name,
+                hotel_city = hotel.hotel_city,
+                hotel_township = hotel.hotel_township,
+                hotel_price = hotel.hotel_price,
+                hotel_description = hotel.hotel_description,
+                SelectedFeatureIds = hotel.features.Select(f =>f.feature_id).ToArray()
+            };
 
-            return View(hotel);
+            ViewBag.Features = new MultiSelectList(_context.Features, "feature_id", "feature_name", model.SelectedFeatureIds);
+            return View(model);
         }
 
+        // POST: HotelEdit
         [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> HotelEdit(HotelEditDTO hotelEditRequest)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> HotelEdit(HotelEditDTO model)
         {
-            //if (id != model.hotel_id)
-            //{
-            //    return NotFound();
-            //}
-
-            if (!_context.Hotels.Any(h => h.hotel_id == hotelEditRequest.hotel_id))
+            if (!_context.Hotels.Any(h => h.hotel_id == model.hotel_id))
             {
                 return NotFound();
             }
 
-            Hotel hotel = _context.Hotels
-                          .Where(x => x.hotel_id == hotelEditRequest.hotel_id)
-                          .First();
-            //Hotel hotel = new Hotel(hotelEditRequest.hotel_id);
-            //_context.Attach(hotel);
-            hotel.hotel_description = hotelEditRequest.hotel_description;
-            hotel.hotel_price = hotelEditRequest.hotel_price;
-            hotel.hotel_name = hotelEditRequest.hotel_name;
-            hotel.hotel_city = hotelEditRequest.hotel_city;
-            hotel.hotel_township = hotelEditRequest.hotel_township;
-
-            if (hotelEditRequest.hotel_image != null && hotelEditRequest.hotel_image.Length > 0)
-            {
-                //var fileName = Path.GetFileName(hotel.hotel_image.FileName);
-                var extension = Path.GetExtension(hotelEditRequest.hotel_image.FileName); // .png
-
-                // wwwroot/img klasörü yolu
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", hotel.hotel_name + extension);
-
-                // Dosyayı wwwroot/img içine kaydet
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await hotelEditRequest.hotel_image.CopyToAsync(stream);
-                }
-            }
-
             if (ModelState.IsValid)
             {
-                try
+                var hotel = await _context.Hotels
+                    .Include(h => h.features)
+                    .FirstOrDefaultAsync(h => h.hotel_id == model.hotel_id);
+
+                if (hotel == null) return NotFound();
+
+                hotel.hotel_name = model.hotel_name;
+                hotel.hotel_city = model.hotel_city;
+                hotel.hotel_township = model.hotel_township;
+                hotel.hotel_price = model.hotel_price;
+                hotel.hotel_description = model.hotel_description;
+
+                // Dosya varsa kaydet ve hotel_image yolunu güncelle
+                if (model.hotel_image != null && model.hotel_image.Length > 0)
                 {
-                    //_context.Update(hotel);
-                    await _context.SaveChangesAsync(); //yapılan kaydetme işlemini veri tabanına geçirir
-                    return RedirectToAction("HotelIndex", "Admin");
+                    var extension = Path.GetExtension(model.hotel_image.FileName);
+                    var fileName = hotel.hotel_name + extension;
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await model.hotel_image.CopyToAsync(stream);
+                    }
+
+                    hotel.hotel_image = fileName;
                 }
 
-                catch (DbUpdateConcurrencyException ex)
+                // Özellik ilişkisini güncelle
+                var selectedFeatures = await _context.Features
+                    .Where(f => model.SelectedFeatureIds.Contains(f.feature_id))
+                    .ToListAsync();
+
+                // Mevcut ilişkileri temizle ve yenileri ekle
+                hotel.features.Clear();
+                foreach (var feature in selectedFeatures)
                 {
-                    return Conflict(new
-                    {
-                        Message = "Başka birisi tarafından güncellendi."
-                    });
+                    hotel.features.Add(feature);
+                }
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("HotelIndex");
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    return Conflict(new { Message = "Başka biri tarafından güncellendi." });
                 }
             }
 
-            return Json(new
-            {
-                Message = "Parametreleri kontrol ediniz."
-            });
+            ViewBag.Features = new MultiSelectList(_context.Features, "feature_id", "feature_name", model.SelectedFeatureIds);
+            return View(model);
         }
 
         [HttpGet]

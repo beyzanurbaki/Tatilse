@@ -12,8 +12,8 @@ using Tatilse.Data;
 namespace Tatilse.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250725061520_removerequired")]
-    partial class removerequired
+    [Migration("20250728081013_InitialDB")]
+    partial class InitialDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,7 +37,36 @@ namespace Tatilse.Migrations
 
                     b.HasIndex("featuresfeature_id");
 
-                    b.ToTable("FeatureHotel");
+                    b.ToTable("HotelFeatures", (string)null);
+                });
+
+            modelBuilder.Entity("Reservation", b =>
+                {
+                    b.Property<int>("reservation_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("reservation_id"));
+
+                    b.Property<int>("client_id")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("end_date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("room_id")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("start_date")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("reservation_id");
+
+                    b.HasIndex("client_id");
+
+                    b.HasIndex("room_id");
+
+                    b.ToTable("Reservations");
                 });
 
             modelBuilder.Entity("Tatilse.Data.Client", b =>
@@ -99,10 +128,6 @@ namespace Tatilse.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<byte>("feature_id"));
 
-                    b.Property<string>("feature_image")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("feature_name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -146,35 +171,6 @@ namespace Tatilse.Migrations
                     b.HasKey("hotel_id");
 
                     b.ToTable("Hotels");
-                });
-
-            modelBuilder.Entity("Tatilse.Data.Reservation", b =>
-                {
-                    b.Property<int>("reservation_id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("reservation_id"));
-
-                    b.Property<int>("client_id")
-                        .HasColumnType("int");
-
-                    b.Property<DateOnly>("end_date")
-                        .HasColumnType("date");
-
-                    b.Property<int>("room_id")
-                        .HasColumnType("int");
-
-                    b.Property<DateOnly>("start_date")
-                        .HasColumnType("date");
-
-                    b.HasKey("reservation_id");
-
-                    b.HasIndex("client_id");
-
-                    b.HasIndex("room_id");
-
-                    b.ToTable("Reservations");
                 });
 
             modelBuilder.Entity("Tatilse.Data.Room", b =>
@@ -230,7 +226,7 @@ namespace Tatilse.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Tatilse.Data.Reservation", b =>
+            modelBuilder.Entity("Reservation", b =>
                 {
                     b.HasOne("Tatilse.Data.Client", "client")
                         .WithMany()

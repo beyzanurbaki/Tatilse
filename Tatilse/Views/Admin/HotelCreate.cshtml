@@ -7,8 +7,7 @@
 <h2>Hotel Ekle</h2>
 <hr>
 
-<form asp-controller="Admin" asp-action="HotelCreate" method="post">
-
+<form asp-controller="Admin" asp-action="HotelCreate" method="post" enctype="multipart/form-data">
     <div class="mb-3">
         <label asp-for="hotel_name" class="form-label">Hotel Adı</label>
         <input asp-for="hotel_name" class="form-control" />
@@ -34,7 +33,7 @@
 
     <div class="mb-3">
         <label for="image" class="form-label">Hotel Fotoğrafı</label>
-        <input id="image" name="image" class="form-control" />
+        <input id="image" name="imageFile" type="file" class="form-control" />
     </div>
 
     <div class="mb-3">

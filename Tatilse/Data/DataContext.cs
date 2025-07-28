@@ -15,5 +15,15 @@ namespace Tatilse.Data
         public DbSet<Room> Rooms => Set<Room>();
 
         public DbSet<Feature> Features => Set<Feature>();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Hotel>()
+                .HasMany(h => h.features)
+                .WithMany(f => f.Hotels)
+                .UsingEntity(j => j.ToTable("HotelFeatures"));
+        }
     }
 }

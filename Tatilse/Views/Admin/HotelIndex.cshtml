@@ -19,10 +19,18 @@
 		@foreach (var item in Model) @*var hotel in Model*@
 		{
 			<tr>
-				<td>@Html.DisplayFor(modelItem => item.hotel_name)</td>  
+				<td>@Html.DisplayFor(modelItem => item.hotel_name)</td>
 				<td>
-				<img src="~/img/@item.hotel_image" alt="Hotel Resmi" style="max-width:200px; max-height:200px;" />
+					@if (!string.IsNullOrEmpty(item.hotel_image))
+					{
+						<img src="@Url.Content("~/img/" + item.hotel_image)" alt="Hotel Resmi" style="max-width:200px; max-height:200px;" />
+					}
+					else
+					{
+						<span>Resim yok</span>
+					}
 				</td>
+
 				@*Satırlar*@
 				<td>@Html.DisplayFor(modelItem => item.hotel_description)</td>
 				<td>@Html.DisplayFor(modelItem => item.hotel_price)</td>

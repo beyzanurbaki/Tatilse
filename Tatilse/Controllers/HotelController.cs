@@ -28,6 +28,33 @@ namespace Tatilse.Controllers
             return View();
         }
 
+        public IActionResult Search(string hotelName, DateTime? startDate, DateTime? endDate, int? guestCount)
+        {
+            List<Hotel> result = new List<Hotel>();
+
+            if (!startDate.HasValue || !endDate.HasValue || !guestCount.HasValue)
+            {
+                return View("SearchResults", result);
+            }
+
+            IQueryable<Hotel> hotels = _context.Hotels.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(hotelName))
+            {
+                hotels = hotels.Where(h => h.hotel_name.Contains(hotelName));
+            }
+
+            hotels = hotels.Where(h => h.rooms.Any(room =>
+                room.room_max_people >= guestCount &&
+                (room.reservations.Count(res => (res.start_date < startDate && res.end_date < endDate)
+                || (res.start_date > startDate && res.end_date > endDate)) != room.room_quantity)
+            ));
+
+            result = hotels.ToList();
+            return PartialView("SearchResults", result);
+        }
+
+
         //public async Task<IActionResult> HotelIndex()
         //{
         //    var hotels = await _context

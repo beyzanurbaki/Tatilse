@@ -24,7 +24,8 @@ namespace Tatilse.Migrations
                     client_identity = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     client_phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     client_email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    client_passw = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: false)
+                    client_passw = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: false),
+                    isAdmin = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -37,8 +38,7 @@ namespace Tatilse.Migrations
                 {
                     feature_id = table.Column<byte>(type: "tinyint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    feature_name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    feature_image = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    feature_name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -54,6 +54,8 @@ namespace Tatilse.Migrations
                     hotel_name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     hotel_price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     hotel_description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    hotel_city = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    hotel_township = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     hotel_image = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -62,7 +64,7 @@ namespace Tatilse.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FeatureHotel",
+                name: "HotelFeatures",
                 columns: table => new
                 {
                     Hotelshotel_id = table.Column<int>(type: "int", nullable: false),
@@ -70,15 +72,15 @@ namespace Tatilse.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FeatureHotel", x => new { x.Hotelshotel_id, x.featuresfeature_id });
+                    table.PrimaryKey("PK_HotelFeatures", x => new { x.Hotelshotel_id, x.featuresfeature_id });
                     table.ForeignKey(
-                        name: "FK_FeatureHotel_Features_featuresfeature_id",
+                        name: "FK_HotelFeatures_Features_featuresfeature_id",
                         column: x => x.featuresfeature_id,
                         principalTable: "Features",
                         principalColumn: "feature_id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_FeatureHotel_Hotels_Hotelshotel_id",
+                        name: "FK_HotelFeatures_Hotels_Hotelshotel_id",
                         column: x => x.Hotelshotel_id,
                         principalTable: "Hotels",
                         principalColumn: "hotel_id",
@@ -116,8 +118,8 @@ namespace Tatilse.Migrations
                 {
                     reservation_id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    start_date = table.Column<DateOnly>(type: "date", nullable: false),
-                    end_date = table.Column<DateOnly>(type: "date", nullable: false),
+                    start_date = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    end_date = table.Column<DateTime>(type: "datetime2", nullable: true),
                     client_id = table.Column<int>(type: "int", nullable: false),
                     room_id = table.Column<int>(type: "int", nullable: false)
                 },
@@ -139,8 +141,8 @@ namespace Tatilse.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_FeatureHotel_featuresfeature_id",
-                table: "FeatureHotel",
+                name: "IX_HotelFeatures_featuresfeature_id",
+                table: "HotelFeatures",
                 column: "featuresfeature_id");
 
             migrationBuilder.CreateIndex(
@@ -163,7 +165,7 @@ namespace Tatilse.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "FeatureHotel");
+                name: "HotelFeatures");
 
             migrationBuilder.DropTable(
                 name: "Reservations");

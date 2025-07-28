@@ -1,35 +1,35 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Tatilse.Models
 {
-    public class HotelEditDTO
+    public class HotelCreateDTO
     {
-        public int hotel_id { get; set; }
-
-        [Display(Name = "Hotel Ad")]
         [Required]
+        [Display(Name = "Hotel Ad")]
         public string hotel_name { get; set; }
 
-        [Display(Name = "Fiyat")]
         [Required]
+        [Display(Name = "Fiyat")]
         public decimal hotel_price { get; set; }
 
-        [Display(Name = "Şehir")]
         [Required]
+        [Display(Name = "Şehir")]
         public string hotel_city { get; set; }
 
-        [Display(Name = "İlçe")]
         [Required]
+        [Display(Name = "İlçe")]
         public string hotel_township { get; set; }
 
+        [Required]
         [Display(Name = "Açıklama")]
         public string hotel_description { get; set; }
 
-        [Display(Name = "Görsel")]
+        [Display(Name = "Hotel Fotoğrafı")]
         public IFormFile? hotel_image { get; set; }
 
         [Display(Name = "Özellikler")]
-        public byte[] SelectedFeatureIds { get; set; } = new byte[0];
+        public int[] SelectedFeatureIds { get; set; } = new int[0];
     }
 }

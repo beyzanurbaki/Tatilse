@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Tatilse.Data.Hotel>
+
+<h2>Arama Sonuçları</h2>
+
+@if (!Model.Any())
+{
+    <p>Uygun otel bulunamadı.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-3">
+                <div class="card mb-3">
+                    <img src="~/img/@(item.hotel_image ?? "default.jpg")" class="card-img-top" alt="otel görseli" />
+                    <div class="card-body">
+                        <h5>@item.hotel_name</h5>
+                        <p>@item.hotel_city - @item.hotel_township</p>
+                        <p>@item.hotel_price TL</p>
+                        <a href="@Url.Action("HotelDetails", "Hotel", new { id = item.hotel_id })" class="btn btn-primary">Detay</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

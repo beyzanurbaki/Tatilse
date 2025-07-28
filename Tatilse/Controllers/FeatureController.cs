@@ -32,7 +32,7 @@ namespace Tatilse.Controllers
         {
             _context.Features.Add(model);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Feature");
         }
 
         public async Task<IActionResult> Index()

@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Tatilse.Data;
 
 namespace Tatilse.Controllers
 {
+
+    [Authorize]
     public class ReservationController : Controller
     {
         private readonly DataContext _context;
@@ -14,6 +15,16 @@ namespace Tatilse.Controllers
             _context = context;
         }
 
-        
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        //[HttpPost]
+        //public IActionResult Create()
+        //{
+        //    return View();
+        //}
+
     }
 }
