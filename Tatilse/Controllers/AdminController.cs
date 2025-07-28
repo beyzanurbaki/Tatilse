@@ -33,6 +33,7 @@ namespace Tatilse.Controllers
             return View();
         }
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> HotelCreate(Hotel model, IFormFile imageFile, int[] SelectedFeatureIds)
@@ -43,22 +44,21 @@ namespace Tatilse.Controllers
                 var fileName = $"{model.hotel_name}{extension}";
                 var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", fileName);
 
-                using (var stream = new FileStream(path, FileMode.OpenOrCreate))
+                using (var stream = new FileStream(path, FileMode.Create))
                 {
                     await imageFile.CopyToAsync(stream);
                 }
 
-                model.hotel_image = fileName; // ❗ görsel ismini veritabanına yaz
+                model.hotel_image = fileName;
             }
 
-            // Özellikler
             if (SelectedFeatureIds != null && SelectedFeatureIds.Length > 0)
             {
-                var features = await _context.Features
+                var selectedFeatures = await _context.Features
                     .Where(f => SelectedFeatureIds.Contains(f.feature_id))
                     .ToListAsync();
 
-                model.features = features;
+                model.features = selectedFeatures;
             }
 
             _context.Hotels.Add(model);
@@ -70,15 +70,15 @@ namespace Tatilse.Controllers
 
 
 
-        // GET: HotelIndex
         public async Task<IActionResult> HotelIndex()
         {
             var hotels = await _context.Hotels
-                .Include(h => h.features)
+                .Include(h => h.features)  // Otel özelliklerini de dahil et
                 .ToListAsync();
 
             return View(hotels);
         }
+      
 
         // GET: HotelEdit
         public async Task<IActionResult> HotelEdit(int? id)
@@ -125,20 +125,21 @@ namespace Tatilse.Controllers
 
                 if (hotel == null) return NotFound();
 
+                // Temel bilgiler güncelleniyor
                 hotel.hotel_name = model.hotel_name;
                 hotel.hotel_city = model.hotel_city;
                 hotel.hotel_township = model.hotel_township;
                 hotel.hotel_price = model.hotel_price;
                 hotel.hotel_description = model.hotel_description;
 
-                // Dosya varsa kaydet ve hotel_image yolunu güncelle
+                // Yeni görsel yüklendiyse
                 if (model.hotel_image != null && model.hotel_image.Length > 0)
                 {
                     var extension = Path.GetExtension(model.hotel_image.FileName);
-                    var fileName = hotel.hotel_name + extension;
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", fileName);
+                    var fileName = Guid.NewGuid().ToString() + extension;
+                    var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", fileName);
 
-                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    using (var stream = new FileStream(imagePath, FileMode.Create))
                     {
                         await model.hotel_image.CopyToAsync(stream);
                     }
@@ -146,12 +147,11 @@ namespace Tatilse.Controllers
                     hotel.hotel_image = fileName;
                 }
 
-                // Özellik ilişkisini güncelle
+                // Özellikler güncelleniyor
                 var selectedFeatures = await _context.Features
                     .Where(f => model.SelectedFeatureIds.Contains(f.feature_id))
                     .ToListAsync();
 
-                // Mevcut ilişkileri temizle ve yenileri ekle
                 hotel.features.Clear();
                 foreach (var feature in selectedFeatures)
                 {
@@ -172,6 +172,7 @@ namespace Tatilse.Controllers
             ViewBag.Features = new MultiSelectList(_context.Features, "feature_id", "feature_name", model.SelectedFeatureIds);
             return View(model);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> HotelDelete(int? id)

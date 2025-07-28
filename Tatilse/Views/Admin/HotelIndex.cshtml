@@ -1,61 +1,68 @@
 ﻿@model IEnumerable<Hotel>
-<h2>Hoteller</h2> @* hotel başlığı *@
-<a href="/Admin/HotelCreate" class="btn btn-primary">Hotel Ekle</a> 
-<hr> @*çizgi*@
-	<table class="table table-bordered"> @*karelere bölünmüş tablo görünümü için gerekli class*@
-	
-		<thead>
-			<tr>
-			<th style="width: 150px;">@Html.DisplayNameFor(m => m.hotel_name)</th>  @*Sütunlar | Hotel ad*@
-			<th>@Html.DisplayNameFor(m => m.hotel_image)</th>
-			<th >@Html.DisplayNameFor(m => m.hotel_description)</th>
-			<th>@Html.DisplayNameFor(m => m.hotel_price)</th>
-			<th>@Html.DisplayNameFor(m => m.hotel_city)</th>
-			<th>@Html.DisplayNameFor(m => m.hotel_township)</th>
-			<th style ="width: 150px;"></th>
-			</tr>
-		</thead>
-		<tbody>
-		@foreach (var item in Model) @*var hotel in Model*@
-		{
-			<tr>
-				<td>@Html.DisplayFor(modelItem => item.hotel_name)</td>
-				<td>
-					@if (!string.IsNullOrEmpty(item.hotel_image))
-					{
-						<img src="@Url.Content("~/img/" + item.hotel_image)" alt="Hotel Resmi" style="max-width:200px; max-height:200px;" />
-					}
-					else
-					{
-						<span>Resim yok</span>
-					}
-				</td>
 
-				@*Satırlar*@
-				<td>@Html.DisplayFor(modelItem => item.hotel_description)</td>
-				<td>@Html.DisplayFor(modelItem => item.hotel_price)</td>
-				<td>@Html.DisplayFor(modelItem => item.hotel_city)</td>
-				<td>@Html.DisplayFor(modelItem => item.hotel_township)</td>
-				<td>
-@* 					<a href="/Hotel/Edit" class="btn btn-primary">Hotel Ekle</a> *@
-					<a asp-controller="Admin" asp-action="HotelEdit" asp-route-id="@item.hotel_id" class="btn btn-sm btn-primary">Edit</a>
-					<form method="post" asp-controller="Admin" asp-action="HotelDelete"
-					style="display:inline" onsubmit="return confirmDelete('@item.hotel_name');">
-					<input type="hidden" name="id" value="@item.hotel_id"/>
-					<button type="submit" class="btn btn-sm btn-danger">Delete</button> 
-					</form>
-				</td>	
-			</tr>
-		}
-		</tbody>
-	</table>
+<h2>Hoteller</h2>
+<a href="/Admin/HotelCreate" class="btn btn-primary mb-3">Hotel Ekle</a>
+<hr />
 
-	@section Scripts{
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th style="width: 150px;">@Html.DisplayNameFor(m => m.hotel_name)</th>
+            <th>@Html.DisplayNameFor(m => m.hotel_image)</th>
+            <th>@Html.DisplayNameFor(m => m.hotel_description)</th>
+            <th>@Html.DisplayNameFor(m => m.hotel_price)</th>
+            <th>@Html.DisplayNameFor(m => m.hotel_city)</th>
+            <th>@Html.DisplayNameFor(m => m.hotel_township)</th>
+            <th>Özellikler</th> @* Yeni sütun *@
+            <th style="width: 150px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.hotel_name)</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.hotel_image))
+                    {
+                        <img src="@Url.Content("~/img/" + item.hotel_image)" alt="Hotel Resmi" style="max-width:200px; max-height:200px;" />
+                    }
+                    else
+                    {
+                        <span>Resim yok</span>
+                    }
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.hotel_description)</td>
+                <td>@Html.DisplayFor(modelItem => item.hotel_price)</td>
+                <td>@Html.DisplayFor(modelItem => item.hotel_city)</td>
+                <td>@Html.DisplayFor(modelItem => item.hotel_township)</td>
+                <td>
+                    @if (item.features != null && item.features.Any())
+                    {
+                        @string.Join(", ", item.features.Select(f => f.feature_name))
+                    }
+                    else
+                    {
+                        <span>Özellik yok</span>
+                    }
+                </td>
+                <td>
+                    <a asp-controller="Admin" asp-action="HotelEdit" asp-route-id="@item.hotel_id" class="btn btn-sm btn-primary">Edit</a>
+                    <form method="post" asp-controller="Admin" asp-action="HotelDelete"
+                          style="display:inline" onsubmit="return confirmDelete('@item.hotel_name');">
+                        <input type="hidden" name="id" value="@item.hotel_id" />
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
-		<script>
-			function confirmDelete(hotel_name){
-				return confirm(hotel_name +"isimli kullanıcıyı silmek ister misiniz?");
-			}
-	</script>
-
-	}
+@section Scripts {
+    <script>
+        function confirmDelete(hotel_name) {
+            return confirm(hotel_name + " isimli oteli silmek istiyor musunuz?");
+        }
+    </script>
+}

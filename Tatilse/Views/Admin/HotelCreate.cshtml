@@ -1,45 +1,57 @@
 ﻿@model Tatilse.Data.Hotel
 
 @{
-    ViewData["Title"] = "Hotel Ekle";
+    ViewData["Title"] = "Hotel Create";
+    var allFeatures = ViewBag.Features as MultiSelectList;
 }
 
-<h2>Hotel Ekle</h2>
-<hr>
+<h2>Otel Ekle</h2>
 
-<form asp-controller="Admin" asp-action="HotelCreate" method="post" enctype="multipart/form-data">
+<form asp-action="HotelCreate" method="post" enctype="multipart/form-data">
     <div class="mb-3">
-        <label asp-for="hotel_name" class="form-label">Hotel Adı</label>
+        <label asp-for="hotel_name" class="form-label"></label>
         <input asp-for="hotel_name" class="form-control" />
     </div>
+
     <div class="mb-3">
-        <label asp-for="hotel_city" class="form-label">Hotel İl</label>
+        <label asp-for="hotel_description" class="form-label"></label>
+        <textarea asp-for="hotel_description" class="form-control"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="hotel_price" class="form-label"></label>
+        <input asp-for="hotel_price" type="number" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="hotel_city" class="form-label"></label>
         <input asp-for="hotel_city" class="form-control" />
     </div>
+
     <div class="mb-3">
-        <label asp-for="hotel_township" class="form-label">Hotel İlçe</label>
+        <label asp-for="hotel_township" class="form-label"></label>
         <input asp-for="hotel_township" class="form-control" />
     </div>
 
     <div class="mb-3">
-        <label asp-for="hotel_price" class="form-label">Hotel Fiyatı</label>
-        <input asp-for="hotel_price" class="form-control" />
+        <label>Görsel Yükle</label>
+        <input type="file" name="imageFile" class="form-control" />
     </div>
 
     <div class="mb-3">
-        <label asp-for="hotel_description" class="form-label">Hotel Açıklaması</label>
-        <input asp-for="hotel_description" class="form-control" />
+        <label>Otel Özellikleri</label>
+        <div class="row">
+            @foreach (var feature in allFeatures)
+            {
+                <div class="col-md-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="SelectedFeatureIds" value="@feature.Value" id="feature_@feature.Value" />
+                        <label class="form-check-label" for="feature_@feature.Value">@feature.Text</label>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
 
-    <div class="mb-3">
-        <label for="image" class="form-label">Hotel Fotoğrafı</label>
-        <input id="image" name="imageFile" type="file" class="form-control" />
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Özellikler</label>
-        <select asp-for="SelectedFeatureIds" asp-items="ViewBag.Features" class="form-control" multiple></select>
-    </div>
-
-    <button type="submit" class="btn btn-secondary">Kaydet</button>
+    <button type="submit" class="btn btn-success">Kaydet</button>
 </form>

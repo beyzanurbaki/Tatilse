@@ -1,54 +1,97 @@
-﻿@model Hotel
+﻿@model Tatilse.Models.HotelEditDTO
 
-<h2>Hotel Güncelle</h2> @* hotel başlığı *@
-<hr> @*çizgi*@
-<form onsubmit="edit(event)">
+<h2 class="mb-4">Hotel Güncelle</h2>
+<hr />
 
-	<input type="hidden" asp-for="hotel_id">
-	<div class="mb-3">
-		<label asp-for="hotel_name" class="form-label">Hotel Adı</label>
-		<input asp-for="hotel_name" class="form-control" />
-	</div>
-	<div class="mb-3">
-		<label asp-for="hotel_price" class="form-label">Hotel Fiyatı</label>
-		<input asp-for="hotel_price" class="form-control" />
-	</div>
-	<div class="mb-3">
-		<label asp-for="hotel_city" class="form-label">Hotel İl</label>
-		<input asp-for="hotel_city" class="form-control" />
-	</div>	<div class="mb-3">
-		<label asp-for="hotel_township" class="form-label">Hotel İlçe</label>
-		<input asp-for="hotel_township" class="form-control" />
-	</div>
+<form id="editForm" enctype="multipart/form-data" onsubmit="edit(event)" class="needs-validation" novalidate>
+    @Html.AntiForgeryToken()
 
-	<div class="mb-3">
-		<label asp-for="hotel_description" class="form-label">Hotel Açıklaması</label>
-		<input asp-for="hotel_description" class="form-control" />
-	</div>
+    <input type="hidden" asp-for="hotel_id" />
 
-	<div class="mb-3">
-		<label asp-for="hotel_image" class="form-label">Hotel Fotoğrafı</label>
-		<input type="file" asp-for="hotel_image" class="form-control" />
-	</div>
+    <div class="mb-3">
+        <label asp-for="hotel_name" class="form-label">Hotel Adı</label>
+        <input asp-for="hotel_name" class="form-control" required />
+        <div class="invalid-feedback">
+            Lütfen hotel adını giriniz.
+        </div>
+    </div>
 
-	<a href=""></a>
-	<button type="submit" class="btn btn-secondary">Kaydet</button>
+    <div class="mb-3">
+        <label asp-for="hotel_price" class="form-label">Hotel Fiyatı</label>
+        <input asp-for="hotel_price" class="form-control" type="number" min="0" step="0.01" required />
+        <div class="invalid-feedback">
+            Geçerli bir fiyat giriniz.
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="hotel_city" class="form-label">Hotel İl</label>
+        <input asp-for="hotel_city" class="form-control" required />
+        <div class="invalid-feedback">
+            Lütfen il bilgisini giriniz.
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="hotel_township" class="form-label">Hotel İlçe</label>
+        <input asp-for="hotel_township" class="form-control" required />
+        <div class="invalid-feedback">
+            Lütfen ilçe bilgisini giriniz.
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="hotel_description" class="form-label">Hotel Açıklaması</label>
+        <textarea asp-for="hotel_description" class="form-control" rows="3"></textarea>
+    </div>
+
+    <div class="mb-4">
+        <label asp-for="hotel_image" class="form-label">Hotel Fotoğrafı</label>
+        <input asp-for="hotel_image" type="file" class="form-control" accept="image/*" />
+        <small class="form-text text-muted">Yeni bir görsel seçebilirsiniz (isteğe bağlı).</small>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Kaydet</button>
 </form>
 
-
 <script>
-	function edit(event){
-		event.preventDefault();
-		const formData = new FormData(event.currentTarget);
-		debugger;
-		fetch("/Admin/HotelEdit", {
-			body: formData,
-			method: "POST"
-		}).then(res=>{
-			alert("işlem başarılı");
-		})
-		.catch(error=>{
-			alert(error);
-		});
-	}
+    // Bootstrap form validation
+    (() => {
+        'use strict';
+        const form = document.querySelector('.needs-validation');
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+                alert('Lütfen formu doğru şekilde doldurun.');
+            }
+            form.classList.add('was-validated');
+        }, false);
+    })();
+
+    function edit(event) {
+        event.preventDefault();
+
+        const form = document.getElementById("editForm");
+        const formData = new FormData(form);
+
+        const token = form.querySelector('input[name="__RequestVerificationToken"]').value;
+
+        fetch('/Admin/HotelEdit', {
+            method: 'POST',
+            headers: {
+                'RequestVerificationToken': token
+            },
+            body: formData
+        })
+        .then(res => {
+            if (res.ok) {
+                alert('Başarıyla güncellendi!');
+                window.location.href = '/Admin/HotelIndex';
+            } else {
+                alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+            }
+        })
+        .catch(e => alert('Sunucu hatası: ' + e));
+    }
 </script>

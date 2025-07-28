@@ -46,16 +46,19 @@
                         }
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle navbar-toplink" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class='fas fa-user-alt'></i> @username
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                    <li>
-                                        <a class="dropdown-item" asp-controller="Client" asp-action="Logout">Çıkış Yap</a>
-                                    </li>
-                                </ul>
-                            </li>
+
+                            <ul class="navbar-nav ms-auto">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle navbar-toplink" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class='fas fa-user-alt'></i> @username
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Client" asp-action="Logout">Çıkış Yap</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
                         }
                         else
                         {
@@ -92,7 +95,6 @@
 
     <div class="container mt-4">
         <div id="search-results">
-            <!-- Sonuçlar buraya yüklenecek -->
         </div>
 
         <main role="main" class="pb-3">
