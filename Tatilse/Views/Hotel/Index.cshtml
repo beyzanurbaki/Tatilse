@@ -1,4 +1,4 @@
-﻿@model Hotel
+﻿@model IEnumerable<Hotel>
 
 
 <head>
@@ -30,8 +30,47 @@
 		</div>
 	</div>
 </body>
+<div class="container mt-4">
+	<div class="row">
+		@foreach (var item in Model)
+		{
+			<div class="col-md-6 mb-4 d-flex">
+				<div class="card shadow-sm w-100 fixed-card">
+					@if (!string.IsNullOrEmpty(item.hotel_image))
+					{
+						<img class="card-img-top" src="@Url.Content("~/img/" + item.hotel_image)" alt="Hotel Resmi" style="height: 250px; object-fit: cover;" />
+					}
+					else
+					{
+						<img class="card-img-top" src="@Url.Content("~/img/default.jpg")" alt="Hotel Resmi" style="height: 250px; object-fit: cover;" />
+					}
 
+					<div class="card-body">
+						<h5 class="card-title">@item.hotel_name</h5>
+						<p class="card-text card-description">@item.hotel_description</p>
+						<p class="card-text">
+							<strong>Fiyat:</strong> @item.hotel_price ₺ <br />
+							<strong>İl:</strong> @item.hotel_city <br />
+							<strong>İlçe:</strong> @item.hotel_township
+						</p>
 
+						<p class="card-text">
+							<strong>Özellikler:</strong>
+							@if (item.features != null && item.features.Any())
+							{
+								@string.Join(", ", item.features.Select(f => f.feature_name))
+							}
+							else
+							{
+								<span>Yok</span>
+							}
+						</p>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</div>
 <script>
 	//   function search(event) {
 	//     event.preventDefault();

@@ -29,37 +29,58 @@ namespace Tatilse.Controllers
         }
 
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var hotels = await _context.Hotels
+                .Include(h => h.rooms)
+                .ToListAsync();
 
-            return View();
-        }
-        public IActionResult Search(string hotelName, DateTime? startDate, DateTime? endDate, int? guestCount)
-        {
-            //List<Hotel> result = new List<Hotel>();
-
-            if (!startDate.HasValue || !endDate.HasValue || !guestCount.HasValue)
+            foreach (var hotel in hotels)
             {
-               return BadRequest("Giriş ve çıkış tarihi seçiniz, misafir sayısını giriniz.");
-                //return PartialView("SearchResults", result);
+                if (hotel.rooms.Any())
+                {
+                    hotel.hotel_price = hotel.rooms.Min(r => r.room_price); // en ucuz oda fiyatı
+                }
+                else
+                {
+                    hotel.hotel_price = 0;
+                }
             }
 
-            IQueryable<Hotel> hotels = _context.Hotels.AsQueryable();
+            return View(hotels);
+        }
+
+        public IActionResult Search(string hotelName, DateTime? startDate, DateTime? endDate, int? guestCount)
+        {
+            if (!startDate.HasValue || !endDate.HasValue || !guestCount.HasValue)
+            {
+                return BadRequest("Giriş ve çıkış tarihi seçiniz, misafir sayısını giriniz.");
+            }
+
+            // Otel özelliklerini ve odaları (ve rezervasyonlarını) birlikte yükle
+            IQueryable<Hotel> hotels = _context.Hotels
+                //.Include(h => h.Features)
+                .Include(h => h.rooms)
+                    .ThenInclude(r => r.reservations)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(hotelName))
             {
                 hotels = hotels.Where(h => h.hotel_name.Contains(hotelName));
             }
 
+            // Müsait odası olan otelleri filtrele
             hotels = hotels.Where(h => h.rooms.Any(room =>
                 room.room_max_people >= guestCount &&
-                (room.reservations.Count(res => (res.start_date < startDate && res.end_date < endDate)
-                || (res.start_date > startDate && res.end_date > endDate)) != room.room_quantity)
+                room.reservations.All(res =>
+                    res.end_date <= startDate || res.start_date >= endDate // çakışmayan rezervasyonlar
+                )
             ));
 
             var result = hotels.ToList();
             return PartialView("SearchResults", result);
         }
+
 
 
         //public async Task<IActionResult> HotelIndex()
