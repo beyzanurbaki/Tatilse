@@ -58,8 +58,14 @@ namespace Tatilse.Controllers
                 return BadRequest("Giriş ve çıkış tarihi seçiniz, misafir sayısını giriniz.");
             }
 
-            // Otel özelliklerini ve odaları (ve rezervasyonlarını) birlikte yükle
-            IQueryable<Hotel> hotels = _context.Hotels
+            var totalDays = (endDate.Value - startDate.Value).Days;
+            if (totalDays <= 0)
+            {
+                return BadRequest("Geçerli bir tarih aralığı giriniz.");
+            }
+
+            // Otel + oda + rezervasyon bilgilerini yüklüyoruz
+            var hotels = _context.Hotels
                 .Include(h => h.features)
                 .Include(h => h.rooms)
                     .ThenInclude(r => r.reservations)
@@ -71,16 +77,31 @@ namespace Tatilse.Controllers
             }
 
             // Müsait odası olan otelleri filtrele
-            hotels = hotels.Where(h => h.rooms.Any(room =>
-                room.room_max_people >= guestCount &&
-                room.reservations.All(res =>
-                    res.end_date <= startDate || res.start_date >= endDate // çakışmayan rezervasyonlar
-                )
-            ));
+            var result = hotels
+                .Where(h => h.rooms.Any(room =>
+                    room.room_max_people >= guestCount &&
+                    room.reservations.All(res =>
+                        res.end_date <= startDate || res.start_date >= endDate)))
+                .ToList();
 
-            var result = hotels.ToList();
+            // Fiyat hesaplaması: oteldeki ilk uygun odayı al ve gün sayısıyla çarp
+            foreach (var hotel in result)
+            {
+                var uygunOda = hotel.rooms.FirstOrDefault(room =>
+                    room.room_max_people >= guestCount &&
+                    room.reservations.All(res =>
+                        res.end_date <= startDate || res.start_date >= endDate));
+
+                if (uygunOda != null)
+                {
+                    hotel.hotel_price = uygunOda.room_price * totalDays;
+                }
+            }
+
             return PartialView("SearchResults", result);
         }
+
+
 
 
 
