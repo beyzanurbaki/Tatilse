@@ -1,58 +1,61 @@
-﻿@model IEnumerable<Hotel>
-<h2>Hotelin adı burada yer alıcak </h2>
-<div id="carouselExample" class="carousel slide" style="max-width:700px; max-height:700px">
-    <div class="carousel-inner">
-        
-        <div class="carousel-item active" >
-            <img src="~/img/concorde-de-luxe-resort.png" class="d-block w-100" alt="Fotoğraf1">
-        </div>
-        <div class="carousel-item">
-            <img src="~/img/Elite World Grand İstanbul Küçükyalı Hotel.png" class="d-block w-100" alt="Fotoğraf2">
-        </div>
-        <div class="carousel-item">
-            <img src="~/img/hilton-istanbul-kozyatagi.png" class="d-block w-100" alt="Fotoğraf3">
+﻿@model Hotel
+
+<div class="container mt-5">
+    <!-- Otel Fotoğrafı -->
+    <div class="text-center mb-4">
+        <img src="~/img/hotel/@Model.hotel_image" class="img-fluid rounded shadow" style="max-height: 400px; object-fit: cover;" alt="Otel Fotoğrafı">
+    </div>
+
+    <!-- Otel Bilgileri -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title">@Model.hotel_name</h2>
+            <p><strong>Adres:</strong> @Model.hotel_city, @Model.hotel_township</p>
+            <p><strong>Açıklama:</strong> @Model.hotel_description</p>
         </div>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
-</div>
 
-<div>
-
-    <div class="col-md-3">
-        @if (Model != null)
-        {
-            <div class="row">
-
-                @foreach (var item in Model)
+    <!-- Otel Özellikleri -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h3>Otel Özellikleri</h3>
+            <ul class="list-group list-group-flush">
+                @foreach (var feature in Model.features)
                 {
-                    <div class="col-md-3">
-                        <div class="card text-center mb-3 card-design" style="max-width:600px;">
-                            <img src="~/img/@(item.hotel_image ?? "default.jpg")" class="card-img-top" alt="Otel Resmi">
+                    <li class="list-group-item">@feature.feature_name</li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    <!-- Odalar -->
+    <div class="card">
+        <div class="card-body">
+            <h3 class="mb-4">Odalar</h3>
+
+            <div class="row">
+                @foreach (var room in Model.rooms)
+                {
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div id="carouselRoom@room.room_id" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner">
+                                    <div class="carousel-item active">
+                                        <img src="~/img/room/@room.room_image" class="d-block w-100" style="height: 200px; object-fit: cover;" alt="Oda Görseli">
+                                    </div>
+                                    <!-- Ekstra görseller eklenecekse burada carousel-item ile ekleyebilirsin -->
+                                </div>
+                            </div>
                             <div class="card-body">
-                                <h5 class="card-text">@Html.DisplayFor(modelItem => item.hotel_name)</h5>
-                                <p class="card-text">@Html.DisplayFor(modelItem => item.hotel_city)</p>
-                                <p class="card-text">@Html.DisplayFor(modelItem => item.hotel_township)</p>
-                                <a href="~/Hotel/HotelDetails" class="d-inline-flex focus-ring py-1 px-2 text-decoration-none border rounded-2 btn btn-primary">@Html.DisplayFor(modelItem => item.hotel_price) TL</a>
+                                <h5 class="card-title">Oda No: @room.room_id</h5>
+                                <p class="card-text">Fiyat: @room.room_price TL</p>
+                                <p class="card-text">Kapasite: @room.room_max_people kişi</p>
                             </div>
                         </div>
                     </div>
-
                 }
             </div>
 
-        }
-        else
-        {
-            <p>Odalar yüklenemedi.</p>
-        }
-
+        </div>
     </div>
-
 </div>

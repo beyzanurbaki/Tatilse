@@ -17,16 +17,21 @@ namespace Tatilse.Controllers
         {
             _context = context;
         }
-        public IActionResult HotelDetails()
+        public IActionResult HotelDetails(int id)
         {
-            //var role = HttpContext.Session.GetString("role");
-            //if (role != "admin")
-            //{
-            //    return RedirectToAction("Login", "Client");  //eğer role admin değilse login sayfasına geri gönder
-            //}
+            var hotel = _context.Hotels
+                .Include(h => h.features)
+                .Include(h => h.rooms)
+                .FirstOrDefault(h => h.hotel_id == id);
 
-            return View();
+            if (hotel == null)
+            {
+                return NotFound();
+            }
+
+            return View(hotel);
         }
+
 
 
         public async Task<IActionResult> Index()
