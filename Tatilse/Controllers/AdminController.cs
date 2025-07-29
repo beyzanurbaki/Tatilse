@@ -67,9 +67,6 @@ namespace Tatilse.Controllers
             return RedirectToAction("HotelIndex");
         }
 
-
-
-
         public async Task<IActionResult> HotelIndex()
         {
             var hotels = await _context.Hotels
@@ -78,9 +75,8 @@ namespace Tatilse.Controllers
 
             return View(hotels);
         }
-      
 
-        // GET: HotelEdit
+    
         public async Task<IActionResult> HotelEdit(int? id)
         {
             if (id == null) return NotFound();
@@ -108,7 +104,6 @@ namespace Tatilse.Controllers
             return View(model);
         }
 
-        // POST: HotelEdit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> HotelEdit(HotelEditDTO model)

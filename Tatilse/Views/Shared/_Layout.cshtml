@@ -26,6 +26,10 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+
+                        <li class="nav-item">
+                            <a class="nav-link navbar-toplink" asp-area="" asp-controller="Hotel" asp-action="Index">Oteller</a>
+                        </li>
                         @if (User.IsInRole(RoleDefinition.Admin))
                         {
                             <li class="nav-item">
@@ -73,30 +77,9 @@
             </div>
         </nav>
     </header>
-    <div class="container mt-4">
-        <form onsubmit="search(event)" class="row g-2 align-items-center">
-            <div class="col-md-3">
-                <input type="text" name="hotelName" class="form-control" placeholder="Otel adı" />
-            </div>
-            <div class="col-md-2">
-                <input type="date" name="startDate" class="form-control" />
-            </div>
-            <div class="col-md-2">
-                <input type="date" name="endDate" class="form-control" />
-            </div>
-            <div class="col-md-2">
-                <input type="number" name="guestCount" class="form-control" min="1" placeholder="Kişi sayısı" />
-            </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-outline-primary w-100">Ara</button>
-            </div>
-        </form>
-    </div>
+
 
     <div class="container mt-4">
-        <div id="search-results">
-        </div>
-
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -115,22 +98,3 @@
 </html>
 
 
-<script>
-      function search(event) {
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-
-        fetch("/Hotel/Search", {
-            method: "POST",
-            body: formData
-        })
-        .then(res => res.text()) // HTML olarak al
-        .then(html => {
-            document.getElementById("search-results").innerHTML = html;
-        })
-        .catch(error => {
-            alert("Bir hata oluştu: " + error);
-        });
-    }
-
-</script>

@@ -28,13 +28,20 @@ namespace Tatilse.Controllers
             return View();
         }
 
+
+        public IActionResult Index()
+        {
+
+            return View();
+        }
         public IActionResult Search(string hotelName, DateTime? startDate, DateTime? endDate, int? guestCount)
         {
-            List<Hotel> result = new List<Hotel>();
+            //List<Hotel> result = new List<Hotel>();
 
             if (!startDate.HasValue || !endDate.HasValue || !guestCount.HasValue)
             {
-                return View("SearchResults", result);
+               return BadRequest("Giriş ve çıkış tarihi seçiniz, misafir sayısını giriniz.");
+                //return PartialView("SearchResults", result);
             }
 
             IQueryable<Hotel> hotels = _context.Hotels.AsQueryable();
@@ -50,7 +57,7 @@ namespace Tatilse.Controllers
                 || (res.start_date > startDate && res.end_date > endDate)) != room.room_quantity)
             ));
 
-            result = hotels.ToList();
+            var result = hotels.ToList();
             return PartialView("SearchResults", result);
         }
 
