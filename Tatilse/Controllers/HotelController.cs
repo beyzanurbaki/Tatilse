@@ -33,6 +33,7 @@ namespace Tatilse.Controllers
         {
             var hotels = await _context.Hotels
                 .Include(h => h.rooms)
+                .Include(h=> h.features)
                 .ToListAsync();
 
             foreach (var hotel in hotels)
@@ -59,7 +60,7 @@ namespace Tatilse.Controllers
 
             // Otel özelliklerini ve odaları (ve rezervasyonlarını) birlikte yükle
             IQueryable<Hotel> hotels = _context.Hotels
-                //.Include(h => h.Features)
+                .Include(h => h.features)
                 .Include(h => h.rooms)
                     .ThenInclude(r => r.reservations)
                 .AsQueryable();
