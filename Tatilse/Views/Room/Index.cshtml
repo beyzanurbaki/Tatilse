@@ -28,7 +28,14 @@
 				<td>@Html.DisplayFor(modelItem => item.room_quantity)</td>
 				<td>@Html.DisplayFor(modelItem => item.room_max_people)</td>
 				<td>@Html.DisplayFor(modelItem => item.room_capacity)</td>
-				<td>@Html.DisplayFor(modelItem => item.room_image)</td>
+				<td>
+					@if (!string.IsNullOrEmpty(item.room_image))
+					{
+						<img src="@Url.Content("~/img/room/" + item.room_image)" alt="Oda Resmi" style="width:100px; height:auto;" />
+
+					}
+				</td>
+
 				<td>@Html.DisplayFor(modelItem => item.hotel_id)</td>
 				<td>
 					<a asp-controller="Room" asp-action="Edit" asp-route-id="@item.room_id" class="btn btn-sm btn-primary">Edit</a>

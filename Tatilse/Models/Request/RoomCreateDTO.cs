@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Tatilse.Models.Request { 
-    public class RoomEditDTO
+namespace Tatilse.Models.Request
+{
+    public class RoomCreateDTO
     {
 
-        public int room_id { get; set; }
 
         [Required]
         [Display(Name = "Oda adı")]
@@ -32,6 +32,6 @@ namespace Tatilse.Models.Request {
 
         public int hotel_id { get; set; }
 
-
     }
 }
+

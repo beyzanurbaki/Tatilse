@@ -1,47 +1,60 @@
 ﻿@model Client
 
+<h1 class="mb-4 text-center">Giriş Yap</h1>
+<hr />
 
-<h1> Login</h1>
-<hr></hr>
-<form onsubmit="login(event)">
-	<div class="form-floating mb- 3">
-		<input name="client_username" class="form-control" id="client_username" placeholder="name@example.com">
-		<label for="client_username">Kullanıcı Adı</label>
-	</div>
-	<div class="form-floating">
-		<input type="password" name="client_password" class="form-control" id="client_password" placeholder="Password">
-		<label for="client_password">Şifre</label>
-	</div>
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <div id="alertPlaceholder"></div>
 
-	<button type="submit" class="btn btn-success mt-3">Giriş Yap</button>
-</form>
+        <form onsubmit="login(event)" novalidate>
+            <div class="form-floating mb-4">
+                <input name="client_username" id="client_username" class="form-control" placeholder="Kullanıcı Adı" required />
+                <label for="client_username">Kullanıcı Adı</label>
+            </div>
+            <div class="form-floating mb-4">
+                <input type="password" name="client_password" id="client_password" class="form-control" placeholder="Şifre" required />
+                <label for="client_password">Şifre</label>
+            </div>
+
+            <button type="submit" class="btn btn-success w-100">Giriş Yap</button>
+        </form>
+
+    </div>
+</div>
 
 <script>
-	function login(event) {
-		event.preventDefault();
-		const formData = new FormData(event.currentTarget);
+    function showAlert(message, type = 'danger') {
+      const alertPlaceholder = document.getElementById('alertPlaceholder');
+      alertPlaceholder.innerHTML = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+          ${message}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>`;
+    }
 
-		fetch("/Client/Login", {
-			body: formData,
-			method: "POST"
-		})
-		.then(res => res.json())
-		.then(data => {
-			if (data.success) { 
-				debugger;
-				if (data.isAdmin) {
-					// Admin paneline yönlendir
-					window.location.href = "/Admin/Dashboard";
-				} else {
-					// Kullanıcı sayfasına yönlendir
-					window.location.href = "/Home/Index";
-				}
-			} else {
-				alert(data.message);
-			}
-		})
-		.catch(err => {
-			alert("Bir hata oluştu: " + err);
-		});
-	}
+    function login(event) {
+      event.preventDefault();
+      const formData = new FormData(event.currentTarget);
+
+      fetch("/Client/Login", {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          if (data.isAdmin) {
+            window.location.href = "/Admin/Dashboard";
+          } else {
+            window.location.href = "/Home/Index";
+          }
+        } else {
+          showAlert(data.message);
+        }
+      })
+      .catch(err => {
+        showAlert("Bir hata oluştu: " + err.message);
+      });
+    }
 </script>

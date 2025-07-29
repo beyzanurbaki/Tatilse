@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc; // controllerdan kalıtım alması için
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Tatilse.Data;
@@ -13,7 +13,6 @@ namespace Tatilse.Controllers
         public RoomController(DataContext context)
         {
             _context = context;
-
         }
 
         public IActionResult Create()
@@ -24,24 +23,59 @@ namespace Tatilse.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Room model)
+        public async Task<IActionResult> Create(RoomCreateDTO model)
         {
-            _context.Rooms.Add(model);
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Hotels = _context.Hotels.ToList();
+                return View(model);
+            }
+
+            var room = new Room
+            {
+                room_name = model.room_name,
+                room_price = model.room_price,
+                room_quantity = model.room_quantity,
+                room_capacity = model.room_capacity,
+                room_max_people = model.room_max_people,
+                hotel_id = model.hotel_id
+            };
+
+            // Görsel yüklendiyse kaydet
+            if (model.room_image != null && model.room_image.Length > 0)
+            {
+                var extension = Path.GetExtension(model.room_image.FileName);
+                var fileName = $"{Guid.NewGuid()}{extension}";
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "room", fileName);
+
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await model.room_image.CopyToAsync(stream);
+                }
+
+                room.room_image = fileName;
+            }
+
+            _context.Rooms.Add(room);
             await _context.SaveChangesAsync();
+
             return RedirectToAction("Index", "Room");
         }
+
         public async Task<IActionResult> Index()
         {
-            var rooms = await _context.Rooms.Include(r => r.hotel).ToListAsync(); 
+            var rooms = await _context.Rooms.Include(r => r.hotel).ToListAsync();
             return View(rooms);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var room = await _context.Rooms.FindAsync(id);
-            if (room == null) return NotFound();
-
-            var hotels = await _context.Hotels.ToListAsync();
+            if (room == null)
+            {
+                return NotFound();
+            }
 
             var dto = new RoomEditDTO
             {
@@ -51,53 +85,73 @@ namespace Tatilse.Controllers
                 room_quantity = room.room_quantity,
                 room_capacity = room.room_capacity,
                 room_max_people = room.room_max_people,
-                room_image = room.room_image,
                 hotel_id = room.hotel_id
             };
 
-            ViewBag.Hotels = new SelectList(hotels, "hotel_id", "hotel_name", dto.hotel_id);
-
-            return View(dto); 
+            return View(dto);
         }
-
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, RoomEditDTO model)
         {
+            if (id != model.room_id)
+            {
+                return NotFound();
+            }
+
             if (!ModelState.IsValid)
             {
-
-                ViewData["Hotels"] = new SelectList(_context.Hotels, "hotel_id", "hotel_name", model.hotel_id);
                 return View(model);
             }
 
             var room = await _context.Rooms.FindAsync(id);
-            if (room == null) return NotFound();
+            if (room == null)
+            {
+                return NotFound();
+            }
 
+            // Alanları güncelle
             room.room_name = model.room_name;
             room.room_price = model.room_price;
             room.room_quantity = model.room_quantity;
             room.room_capacity = model.room_capacity;
             room.room_max_people = model.room_max_people;
-            room.room_image = model.room_image;
-            room.hotel_id = model.hotel_id;
 
+            // Görsel yüklendiyse kaydet
+            if (model.room_image != null)
+            {
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.room_image.FileName);
+                var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "room");
 
+                if (!Directory.Exists(directoryPath))
+                    Directory.CreateDirectory(directoryPath);
+
+                var filePath = Path.Combine(directoryPath, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.room_image.CopyToAsync(stream);
+                }
+
+                room.room_image = "~/img/room/" + fileName;
+            }
+
+            _context.Update(room);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index" , "Room");
+
+            return RedirectToAction(nameof(Index));
         }
 
 
-        [HttpGet]
 
+
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
-
             }
 
             var room = await _context.Rooms.FindAsync(id);
@@ -110,27 +164,18 @@ namespace Tatilse.Controllers
             return View(room);
         }
 
-
-
-
         [HttpPost]
-
-        public async Task<IActionResult> Delete([FromForm] int id) //Model Binding [FromForm]
+        public async Task<IActionResult> Delete([FromForm] int id)
         {
             var room = await _context.Rooms.FindAsync(id);
             if (room == null)
             {
                 return NotFound();
-
             }
 
             _context.Rooms.Remove(room);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index", "Room");
         }
-
-
-
-
     }
 }

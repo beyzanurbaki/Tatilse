@@ -3,7 +3,7 @@
 <div class="container mt-5">
     <!-- Otel Fotoğrafı -->
     <div class="text-center mb-4">
-        <img src="~/img/hotel/@Model.hotel_image" class="img-fluid rounded shadow" style="max-height: 400px; object-fit: cover;" alt="Otel Fotoğrafı">
+        <img src="@Url.Content("~/img/hotel/" + Model.hotel_image)" class="img-fluid rounded shadow" style="max-height: 400px; object-fit: cover;" alt="Otel Fotoğrafı" />
     </div>
 
     <!-- Otel Bilgileri -->

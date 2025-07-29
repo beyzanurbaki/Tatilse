@@ -4,48 +4,58 @@
 	var hotels = ViewBag.Hotels as List<Hotel>;
 }
 
-<h2>Oda oluştur</h2> @* hotel başlığı *@
-<hr> @*çizgi*@
-<form asp-controller="Room" asp-action="Create" method="post">
+<h2 class="mb-4">Oda Oluştur</h2>
+<hr />
+
+<form asp-controller="Room" asp-action="Create" method="post" enctype="multipart/form-data">
 
 	<div class="mb-3">
 		<label asp-for="room_name" class="form-label">Oda Adı</label>
 		<input asp-for="room_name" class="form-control" />
+		<span asp-validation-for="room_name" class="text-danger"></span>
 	</div>
+
 	<div class="mb-3">
 		<label asp-for="room_price" class="form-label">Fiyat</label>
 		<input asp-for="room_price" class="form-control" />
+		<span asp-validation-for="room_price" class="text-danger"></span>
 	</div>
 
 	<div class="mb-3">
 		<label asp-for="room_quantity" class="form-label">Adet</label>
 		<input asp-for="room_quantity" class="form-control" />
-	</div>
-	<div class="mb-3">
-		<label asp-for="room_max_people" class="form-label">Odanın alacağı max kişi sayısı</label>
-		<input asp-for="room_max_people" class="form-control" />
-	</div>
-	<div class="mb-3">
-		<label asp-for="room_capacity" class="form-label">Oda Büyüklüğü</label>
-		<input asp-for="room_capacity" class="form-control" />
-	</div>
-	<div class="mb-3">
-		<label asp-for="room_image" class="form-label">Görsel</label>
-		<input asp-for="room_image" class="form-control" />
+		<span asp-validation-for="room_quantity" class="text-danger"></span>
 	</div>
 
 	<div class="mb-3">
-		<label asp-for="hotel_id" class="form-label">Hotel No</label>
-		<select id="hotel_id" name="hotel_id" class="form-control">
+		<label asp-for="room_max_people" class="form-label">Maksimum Kişi Sayısı</label>
+		<input asp-for="room_max_people" class="form-control" />
+		<span asp-validation-for="room_max_people" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="room_capacity" class="form-label">Oda Büyüklüğü (m²)</label>
+		<input asp-for="room_capacity" class="form-control" />
+		<span asp-validation-for="room_capacity" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="room_image" class="form-label">Oda Görseli</label>
+		<input asp-for="room_image" class="form-control" type="file" />
+		<span asp-validation-for="room_image" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="hotel_id" class="form-label">Hotel</label>
+		<select asp-for="hotel_id" class="form-select">
 			@foreach (var hotel in hotels)
 			{
 				<option value="@hotel.hotel_id">@hotel.hotel_name</option>
 			}
 		</select>
-		@* <input asp-for="hotel_id" class="form-control" /> *@
+		<span asp-validation-for="hotel_id" class="text-danger"></span>
 	</div>
 
-	<button type="submit" class="btn btn-secondary">Kaydet</button>
-
+	<button type="submit" class="btn btn-primary">Kaydet</button>
 
 </form>

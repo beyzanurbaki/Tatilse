@@ -26,7 +26,7 @@ namespace Tatilse.Data
         public short room_max_people { get; set; }
 
         [Display(Name = ("Oda görsel"))]
-        public string room_image { get; set; }
+        public string? room_image { get; set; }
 
         //  [ForeignKey("hotel_id")] // yabancı anahtar old için
         [ForeignKey(nameof(hotel_id))]
