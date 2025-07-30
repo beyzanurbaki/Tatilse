@@ -1,0 +1,28 @@
+﻿@model IEnumerable<dynamic>
+
+<div class="row">
+    @foreach (var room in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img src="@Url.Content("~/img/room/" + room.room_image)" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Oda Görseli" />
+                <div class="card-body">
+                    <h5 class="card-title">@room.room_name</h5>
+                    <p class="card-text">Toplam Fiyat: @room.total_price TL</p>
+                    <p class="card-text">Kapasite: @room.room_max_people kişi</p>
+                    @if (room.isAvailable)
+                    {
+                        <form asp-controller="Reservation" asp-action="ReservationCreate" method="get">
+                            <input type="hidden" name="roomId" value="@room.room_id" />
+                            <button type="submit" class="btn btn-primary mt-2">Rezervasyon Yap</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span class="text-danger">Müsait değil</span>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
