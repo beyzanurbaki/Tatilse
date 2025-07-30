@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Tatilse.Data;
 
+namespace Tatilse.Models { }
 public class Reservation
 {
     [Key]
@@ -29,3 +30,4 @@ public class Reservation
     [ForeignKey("room_id")]
     public Room room { get; set; } = null!;
 }
+

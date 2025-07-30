@@ -29,8 +29,8 @@
     </div>
 
     <!-- Odalar -->
-    <div class="card">
-        <div class="card-body">
+    <div class="">
+        <div class="">
             <h3 class="mb-4">Odalar</h3>
 
             <div class="row">
@@ -43,13 +43,18 @@
                                     <div class="carousel-item active">
                                         <img src="~/img/room/@room.room_image" class="d-block w-100" style="height: 200px; object-fit: cover;" alt="Oda Görseli">
                                     </div>
-                                    <!-- Ekstra görseller eklenecekse burada carousel-item ile ekleyebilirsin -->
                                 </div>
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title">Oda No: @room.room_id</h5>
+                                <p>deneme</p>
                                 <p class="card-text">Fiyat: @room.room_price TL</p>
                                 <p class="card-text">Kapasite: @room.room_max_people kişi</p>
+
+                                <form asp-controller="Reservation" asp-action="ReservationCreate" method="get">
+                                    <input type="hidden" name="roomId" value="@room.room_id" />
+                                    <button type="submit" class="btn btn-primary mt-2">Rezervasyon Yap</button>
+                                </form>
                             </div>
                         </div>
                     </div>

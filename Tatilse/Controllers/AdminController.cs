@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Tatilse.Data;
 using Tatilse.Models;
+using Tatilse.Models.Request;
 namespace Tatilse.Controllers
 {
     [Authorize(Roles = RoleDefinition.Admin)]
@@ -132,10 +133,10 @@ namespace Tatilse.Controllers
                 if (model.hotel_image != null && model.hotel_image.Length > 0)
                 {
                     var extension = Path.GetExtension(model.hotel_image.FileName);
-                    var fileName = Guid.NewGuid().ToString() + extension;
+                    var fileName = model.hotel_name + extension;
                     var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", fileName);
 
-                    using (var stream = new FileStream(imagePath, FileMode.Create))
+                    using (var stream = new FileStream(imagePath, FileMode.OpenOrCreate))
                     {
                         await model.hotel_image.CopyToAsync(stream);
                     }
@@ -222,19 +223,6 @@ namespace Tatilse.Controllers
         {
             var reservations = await _context.Reservations.ToListAsync();
             return View(reservations);
-        }
-
-        public IActionResult ReservationCreate()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> ReservationCreate(Reservation model)
-        {
-            _context.Reservations.Add(model);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("ReservationIndex", "Admin");
         }
 
 

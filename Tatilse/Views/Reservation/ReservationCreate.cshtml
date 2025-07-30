@@ -1,23 +1,47 @@
-﻿@model Reservation
+﻿@model Tatilse.Models.Request.ReservationCreateDTO
 
-<h2>Rezervasyon Yap</h2>
-<hr>
-<form asp-controller="Admin" asp-action="ReservationCreate" method="post">
-    <div class="mb-3">
-        <label asp-for="client_id" class="form-label">Müşteri id</label>
-        <input asp-for="client_id" class="form-control" />
+@{
+    ViewData["Title"] = "Rezervasyon Oluştur";
+}
+
+<h2>Rezervasyon Oluştur</h2>
+
+<form asp-action="ReservationCreate" method="post">
+    <div class="form-group">
+        <label>Başlangıç Tarihi</label>
+        <input asp-for="start_date" type="date" class="form-control" />
+        <span asp-validation-for="start_date" class="text-danger"></span>
     </div>
-    <div class="mb-3">
-        <label asp-for="room_id" class="form-label">Room id</label>
-        <input asp-for="room_id" class="form-control" />
+
+    <div class="form-group">
+        <label>Bitiş Tarihi</label>
+        <input asp-for="end_date" type="date" class="form-control" />
+        <span asp-validation-for="end_date" class="text-danger"></span>
     </div>
-    <div class="mb-3">
-        <label asp-for="start_date" class="form-label">Giriş Tarihi</label>
-        <input asp-for="start_date" class="form-control" />
+
+    <div class="form-group">
+        <label>Oda</label>
+        <select asp-for="room_id" class="form-control" asp-items="ViewBag.Rooms"></select>
+        <span asp-validation-for="room_id" class="text-danger"></span>
     </div>
-    <div class="mb-3">
-        <label asp-for="end_date" class="form-label">Çıkış Tarihi</label>
-        <input asp-for="end_date" class="form-control" />
-    </div>
-    <button type="submit" class="btn btn-secondary">Kaydet</button>
+
+    @* Oda ve Otel bilgilerini listele (seçilen oda üzerinden) *@
+    @if (ViewBag.SelectedRoom != null)
+    {
+        <div class="form-group mt-3">
+            <strong>Oda Bilgisi:</strong> @ViewBag.SelectedRoom.room_name <br />
+            <strong>Otel:</strong> @ViewBag.SelectedRoom.hotel.hotel_name
+        </div>
+    }
+
+    @* Adminse müşteri seçimi de olsun *@
+    @if (ViewBag.Clients != null)
+    {
+        <div class="form-group">
+            <label>Müşteri</label>
+            <select name="client_id" class="form-control" asp-items="ViewBag.Clients"></select>
+        </div>
+    }
+
+    <button type="submit" class="btn btn-primary mt-3">Kaydet</button>
 </form>

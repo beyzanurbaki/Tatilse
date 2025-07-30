@@ -18,28 +18,29 @@ namespace Tatilse.Controllers
             _context = context;
         }
 
-        [AllowAnonymous] 
-        public IActionResult Login()
+        [AllowAnonymous]
+        public IActionResult Login(string returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromForm] LoginRequest loginRequest)
+        public async Task<IActionResult> Login([FromForm] LoginRequest loginRequest, string returnUrl = null)
         {
             var client = await _context.Clients
                 .FirstOrDefaultAsync(c =>
                     c.client_username == loginRequest.client_username &&
                     c.client_passw == loginRequest.client_password);
-            //HttpContext.User.Identity.Name
+
             if (client != null)
             {
                 var claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Name, client.client_username),
-                        new Claim("fullname", client.client_name + " " + client.client_surname),
-                    };
+        {
+            new Claim(ClaimTypes.Name, client.client_username),
+            new Claim("fullname", client.client_name + " " + client.client_surname),
+        };
 
                 if (client.isAdmin)
                 {
@@ -49,7 +50,17 @@ namespace Tatilse.Controllers
                 var identity = new ClaimsIdentity(claims, "MyCookieAuth");
                 var principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync("MyCookieAuth", principal);
-                return Json(new { success = true, isAdmin = client.isAdmin });
+
+                HttpContext.Session.SetInt32("client_id", client.client_id);
+
+                return Json(new
+                {
+                    success = true,
+                    redirectUrl = !string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)
+                        ? returnUrl
+                        : Url.Action("Index", "Home"),
+                    isAdmin = client.isAdmin
+                });
             }
 
             return Json(new { success = false, message = "Kullanıcı adı veya şifre hatalı." });

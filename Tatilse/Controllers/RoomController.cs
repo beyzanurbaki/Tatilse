@@ -45,10 +45,10 @@ namespace Tatilse.Controllers
             if (model.room_image != null && model.room_image.Length > 0)
             {
                 var extension = Path.GetExtension(model.room_image.FileName);
-                var fileName = $"{Guid.NewGuid()}{extension}";
+                var fileName = $"{model.room_name}{extension}";
                 var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "room", fileName);
 
-                using (var stream = new FileStream(path, FileMode.Create))
+                using (var stream = new FileStream(path, FileMode.OpenOrCreate))
                 {
                     await model.room_image.CopyToAsync(stream);
                 }
@@ -121,7 +121,7 @@ namespace Tatilse.Controllers
             // Görsel yüklendiyse kaydet
             if (model.room_image != null)
             {
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.room_image.FileName);
+                var fileName = model.room_name + Path.GetExtension(model.room_image.FileName);
                 var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "room");
 
                 if (!Directory.Exists(directoryPath))
@@ -129,12 +129,13 @@ namespace Tatilse.Controllers
 
                 var filePath = Path.Combine(directoryPath, fileName);
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                using (var stream = new FileStream(filePath, FileMode.OpenOrCreate))
                 {
                     await model.room_image.CopyToAsync(stream);
                 }
 
-                room.room_image = "~/img/room/" + fileName;
+                //room.room_image = "~/img/room/" + fileName;
+                room.room_image = fileName;
             }
 
             _context.Update(room);
