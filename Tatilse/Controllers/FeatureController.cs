@@ -30,10 +30,40 @@ namespace Tatilse.Controllers
 
         public async Task<IActionResult> Create(Feature model)
         {
-            _context.Features.Add(model);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index", "Feature");
+            // Kullanıcı adı daha önce alınmış mı kontrol et
+            bool FeaturNameExists = _context.Features.Any(f => f.feature_name == model.feature_name);
+
+            if (FeaturNameExists)
+            {
+                ModelState.AddModelError("feature_name", "Bu isme sahip bir özellik var.");
+                return View(model); // Aynı sayfayı modelle geri döner
+            }
+
+            if (ModelState.IsValid)
+            {
+                _context.Features.Add(model);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
         }
+        //public async Task<IActionResult> Create(Feature model)
+        //{
+        //    if (_context.Features.Any(f => f.feature_name == model.feature_name))
+        //    {
+        //        ModelState.AddModelError("feature_name", "Bu isme sahip bir özellik mevcut.");
+        //    }
+
+        //    if (ModelState.IsValid) {
+        //        return View(model);
+        //    }
+ 
+
+        //    _context.Features.Add(model);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction("Index", "Feature");
+        //}
 
         public async Task<IActionResult> Index()
         {

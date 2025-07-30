@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -11,6 +12,8 @@ namespace Tatilse.Data
         [Display(Name = "Özellik ID")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public byte feature_id { get; set; }
+
+        [Remote(action: "CheckFeaturName", controller: "Account")]
 
         [Display(Name = "Özellik Adı")]
         public string feature_name { get; set; }

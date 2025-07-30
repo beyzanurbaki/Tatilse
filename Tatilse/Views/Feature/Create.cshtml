@@ -1,4 +1,8 @@
-﻿@model Feature
+﻿@Html.AntiForgeryToken()
+<partial name="_ValidationScriptsPartial" />
+
+@model Feature
+
 
 <h2>Özellik Oluştur</h2> @* hotel başlığı *@
 <hr> @*çizgi*@
@@ -7,6 +11,7 @@
 	<div class="mb-3">                                        
 		<label asp-for="feature_name" class="form-label">Özellik Adı</label>
 		<input asp-for="feature_name" class="form-control" />
+		<span asp-validation-for="feature_name"></span>
 	</div>
 @* 	<div class="mb-3">
 		<label asp-for="feature_image" class="form-label">Özelliğin Simgesi</label>
