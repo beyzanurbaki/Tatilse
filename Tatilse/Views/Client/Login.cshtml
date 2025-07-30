@@ -18,8 +18,12 @@
             </div>
 
             <button type="submit" class="btn btn-success w-100">Giriş Yap</button>
-        </form>
 
+            <div class="form-floating mt-3">
+                <a asp-controller="Client" asp-action="Create" asp-route-id="@(Model?.client_id ?? 0)" class="btn btn-sm btn-danger">Hesabın yok mu? Üye ol</a>
+            </div>
+
+        </form>
     </div>
 </div>
 

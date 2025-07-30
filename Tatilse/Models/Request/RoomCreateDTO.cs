@@ -27,6 +27,7 @@ namespace Tatilse.Models.Request
         [Display(Name = "Odada kalabilecek kişi sayısı")]
         public short room_max_people { get; set; }
 
+        [Required]
         [Display(Name = "Görsel")]
         public IFormFile? room_image { get; set; }
 

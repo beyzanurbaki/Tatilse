@@ -80,13 +80,13 @@ namespace Tatilse.Controllers
             return View(clients);
         }
 
-        [Authorize(Roles = RoleDefinition.Admin)]
+        [AllowAnonymous]
         public IActionResult Create()
         {
             return View();
         }
 
-        [Authorize(Roles = RoleDefinition.Admin)]
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Create(Client model)
         {

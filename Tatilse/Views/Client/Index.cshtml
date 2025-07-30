@@ -33,11 +33,11 @@
 				<td>@Html.DisplayFor(modelItem => item.client_phone)</td>
 				<td>@Html.DisplayFor(modelItem => item.client_email)</td>
 				<td>
-					<a asp-controller="Client" asp-action="Edit" asp-route-id="@item.client_id" class="btn btn-sm btn-primary">Edit</a>
+					<a asp-controller="Client" asp-action="Edit" asp-route-id="@item.client_id" class="btn btn-sm btn-primary">Düzenle</a>
 					<form method="post" asp-controller="Client" asp-action="Delete"
 					style="display:inline;" onsubmit="return confirmDelete('@item.client_name');">
 						<input type="hidden" name="id" value="@item.client_id" />
-						<button type="submit" class="btn btn-sm btn-danger">Delete</button>
+						<button type="submit" class="btn btn-sm btn-danger">Sil</button>
 					</form>
 				</td>
 			</tr>

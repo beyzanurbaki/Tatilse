@@ -38,11 +38,11 @@
 
 				<td>@Html.DisplayFor(modelItem => item.hotel_id)</td>
 				<td>
-					<a asp-controller="Room" asp-action="Edit" asp-route-id="@item.room_id" class="btn btn-sm btn-primary">Edit</a>
+					<a asp-controller="Room" asp-action="Edit" asp-route-id="@item.room_id" class="btn btn-sm btn-primary">Düzenle</a>
 					<form method="post" asp-controller="Room" asp-action="Delete"
 						  style="display:inline" onsubmit="return confirmDelete('@item.room_name');">
 						<input type="hidden" name="id" value="@item.room_id" />
-						<button type="submit" class="btn btn-sm btn-danger">Delete</button>
+						<button type="submit" class="btn btn-sm btn-danger">Sil</button>
 					</form>
 				</td>
 			</tr>

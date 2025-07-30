@@ -46,7 +46,7 @@ namespace Tatilse.Controllers
             {
                 var extension = Path.GetExtension(model.room_image.FileName);
                 var fileName = $"{model.room_name}{extension}";
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "room", fileName);
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "room", fileName);
 
                 using (var stream = new FileStream(path, FileMode.OpenOrCreate))
                 {
@@ -129,7 +129,8 @@ namespace Tatilse.Controllers
 
                 var filePath = Path.Combine(directoryPath, fileName);
 
-                using (var stream = new FileStream(filePath, FileMode.OpenOrCreate))
+                //using (var stream = new FileStream(filePath, FileMode.OpenOrCreate))
+                using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await model.room_image.CopyToAsync(stream);
                 }

@@ -12,6 +12,7 @@ namespace Tatilse.Models.Request {
 
         [Required]
         [Display(Name = "Fiyat")]
+        [Range(0, double.MaxValue, ErrorMessage = "Fiyat pozitif bir sayı olmalıdır")]
         public decimal room_price { get; set; }
 
         [Required]
@@ -27,6 +28,8 @@ namespace Tatilse.Models.Request {
         [Display(Name = "Odada kalabilecek kişi sayısı")]
         public short room_max_people { get; set; }
 
+
+        [Required]
         [Display(Name = "Görsel")]
         public IFormFile? room_image { get; set; }
 

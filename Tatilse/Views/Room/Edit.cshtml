@@ -13,37 +13,38 @@
 
     <div class="form-group">
         <label asp-for="room_name" class="control-label"></label>
-        <input asp-for="room_name" class="form-control" />
+        <input asp-for="room_name" class="form-control" required />
         <span asp-validation-for="room_name" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="room_price" class="control-label"></label>
-        <input asp-for="room_price" class="form-control" />
+        <input asp-for="room_price" class="form-control" type="number" step="0.01" required />
         <span asp-validation-for="room_price" class="text-danger"></span>
     </div>
 
+
     <div class="form-group">
         <label asp-for="room_quantity" class="control-label"></label>
-        <input asp-for="room_quantity" class="form-control" />
+        <input asp-for="room_quantity" class="form-control" required />
         <span asp-validation-for="room_quantity" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="room_capacity" class="control-label"></label>
-        <input asp-for="room_capacity" class="form-control" />
+        <input asp-for="room_capacity" class="form-control" required />
         <span asp-validation-for="room_capacity" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="room_max_people" class="control-label"></label>
-        <input asp-for="room_max_people" class="form-control" />
+        <input asp-for="room_max_people" class="form-control" required />
         <span asp-validation-for="room_max_people" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="room_image" class="control-label"></label>
-        <input asp-for="room_image" type="file" class="form-control" />
+        <input asp-for="room_image" type="file" class="form-control" required />
         <span asp-validation-for="room_image" class="text-danger"></span>
     </div>
 
