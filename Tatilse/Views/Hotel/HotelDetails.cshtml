@@ -1,26 +1,25 @@
 ﻿@model Hotel
 
-<top>
-    <div class="container mt-4">
-        <form onsubmit="search(event)" class="row g-2 align-items-center">
-            <div class="col-md-3">
-                <input type="text" name="hotelName" class="form-control" placeholder="Otel adı" />
-            </div>
-            <div class="col-md-2">
-                <input type="date" name="startDate" class="form-control" />
-            </div>
-            <div class="col-md-2">
-                <input type="date" name="endDate" class="form-control" />
-            </div>
-            <div class="col-md-2">
-                <input type="number" name="guestCount" class="form-control" min="1" placeholder="Kişi sayısı" />
-            </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-outline-primary w-100">Ara</button>
-            </div>
-        </form>
-    </div>
-</top>
+
+<div class="container mt-4">
+    <form onsubmit="search(event)" class="row g-2 align-items-center">
+        <div class="col-md-3">
+            <input type="text" name="hotelName" class="form-control" placeholder="Otel adı" />
+        </div>
+        <div class="col-md-2">
+            <input type="date" name="startDate" class="form-control" />
+        </div>
+        <div class="col-md-2">
+            <input type="date" name="endDate" class="form-control" />
+        </div>
+        <div class="col-md-2">
+            <input type="number" name="guestCount" class="form-control" min="1" placeholder="Kişi sayısı" />
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-outline-primary w-100">Ara</button>
+        </div>
+    </form>
+</div>
 
 <body>
     <div class="container mt-5">
@@ -89,26 +88,26 @@
     </div>
 
 </body>
-<script>
-                                            function search(event) {
-     event.preventDefault();
-     const formData = new FormData(event.currentTarget);
 
-     fetch("/Hotel/Search", {
-      method: "POST",
-      body: formData
-     })
-     .then(res => {
-      if (!res.ok) {
-       return res.text().then(err => { throw new Error(err); });
-      }
-      return res.text();
-     })
-     .then(html => {
-      document.getElementById("search-results").innerHTML = html;
-     })
-     .catch(error => {
-      alert(error.message);
-     });
-    }
-</script>
+<script>
+ function search(event) {
+  event.preventDefault();
+  const formData = new FormData(event.currentTarget);
+
+  fetch("/Hotel/Search", {
+   method: "POST",
+   body: formData
+  })
+  .then(res => {
+   if (!res.ok) {
+    return res.text().then(err => { throw new Error(err); });
+   }
+   return res.text();
+  })
+  .then(html => {
+   document.getElementById("search-results").innerHTML = html;
+  })
+  .catch(error => {
+   alert(error.message);
+  });
+ }

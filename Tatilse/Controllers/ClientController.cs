@@ -90,9 +90,23 @@ namespace Tatilse.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Client model)
         {
-            _context.Clients.Add(model);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            // Kullanıcı adı daha önce alınmış mı kontrol et
+            bool usernameExists = _context.Clients.Any(c => c.client_username == model.client_username);
+
+            if (usernameExists)
+            {
+                ModelState.AddModelError("client_username", "Bu kullanıcı adı zaten kullanılıyor.");
+                return View(model); // Aynı sayfayı modelle geri döner
+            }
+
+            if (ModelState.IsValid)
+            {
+                _context.Clients.Add(model);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
         }
 
         [Authorize(Roles = RoleDefinition.Admin)]

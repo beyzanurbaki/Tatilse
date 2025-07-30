@@ -1,4 +1,7 @@
-﻿@model Client
+﻿@Html.AntiForgeryToken()
+<partial name="_ValidationScriptsPartial" />
+
+@model Client
 
 <h2>Müşteri Ekle</h2> @* hotel başlığı *@
 <hr> @*çizgi*@
@@ -16,11 +19,12 @@
 @* 		<div class="invalid-feedback">
 			Lütfen soyadınızı giriniz.
 		</div> *@
-	</div>
-	<div class="mb-3">
-		<label asp-for="client_username" class="form-label">Kullanıcı adı</label>
-		<input asp-for="client_username" class="form-control" />
-	</div>
+		<div class="mb-3">
+			<label asp-for="client_username" class="form-label">Kullanıcı adı</label>
+			<input asp-for="client_username" class="form-control" />
+			<span asp-validation-for="client_username" class="text-danger"></span>
+		</div>
+
 	<div class="mb-3">
 		<label asp-for="client_passw" class="form-label">Şifre</label>
 		<input asp-for="client_passw" class="form-control" />

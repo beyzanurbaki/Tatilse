@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Tatilse.Data
 {
@@ -10,11 +11,12 @@ namespace Tatilse.Data
 
 
         [Display(Name = "Kullanıcı Adı")]
-        [MaxLength(15, ErrorMessage = "15 karakterden fazla şifre tanımlayamazsınız.")]
+        [MaxLength(15, ErrorMessage = "15 karakterden fazla kullanıcı adı tanımlayamazsınız.")]
 
+        [Remote(action: "CheckUsername", controller: "Account")]
         public string client_username { get; set; }
 
-        [MaxLength(50, ErrorMessage = "HATA!")]
+        [MaxLength(30, ErrorMessage = "HATA!")]
 
         [Display(Name = "Ad")]
         public string client_name { get; set; }
