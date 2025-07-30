@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Hotel>
 
 <h2>Hoteller</h2>
-<a href="/Admin/HotelCreate" class="btn btn-primary mb-3">Hotel Ekle</a>
+<a href="/Admin/HotelCreate" class="btn btn-primary mb-3">Otel Ekle</a>
 <hr />
 
 <table class="table table-bordered">
@@ -47,11 +47,11 @@
                     }
                 </td>
                 <td>
-                    <a asp-controller="Admin" asp-action="HotelEdit" asp-route-id="@item.hotel_id" class="btn btn-sm btn-primary">Edit</a>
+                    <a asp-controller="Admin" asp-action="HotelEdit" asp-route-id="@item.hotel_id" class="btn btn-sm btn-primary">Düzenle</a>
                     <form method="post" asp-controller="Admin" asp-action="HotelDelete"
                           style="display:inline" onsubmit="return confirmDelete('@item.hotel_name');">
                         <input type="hidden" name="id" value="@item.hotel_id" />
-                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        <button type="submit" class="btn btn-sm btn-danger">Sil</button>
                     </form>
                 </td>
             </tr>

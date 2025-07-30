@@ -25,11 +25,11 @@
 				<td>@Html.DisplayFor(modelItem => item.client_id)</td>
 				<td>@Html.DisplayFor(modelItem => item.room_id)</td>
 				<td>
-					<a asp-controller="Admin" asp-action="ReservationEdit" asp-route-id="@item.reservation_id" class="btn btn-sm btn-primary">Edit</a>
+					<a asp-controller="Admin" asp-action="ReservationEdit" asp-route-id="@item.reservation_id" class="btn btn-sm btn-primary">Düzenle</a>
 					<form method="post" asp-controller="Admin" asp-action="ReservationDelete"
 						  style="display:inline" onsubmit="return confirmDelete('@item.client_id');">
 						<input type="hidden" name="id" value="@item.reservation_id" />
-						<button type="submit" class="btn btn-sm btn-danger">Delete</button>
+						<button type="submit" class="btn btn-sm btn-danger">Sil</button>
 					</form>
 				</td>
 			</tr>

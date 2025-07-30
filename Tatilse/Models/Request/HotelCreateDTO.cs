@@ -7,7 +7,7 @@ namespace Tatilse.Models
     public class HotelCreateDTO
     {
         [Required]
-        [Display(Name = "Hotel Ad")]
+        [Display(Name = "Otel Ad")]
         public string hotel_name { get; set; }
 
         [Required]
@@ -26,7 +26,7 @@ namespace Tatilse.Models
         [Display(Name = "Açıklama")]
         public string hotel_description { get; set; }
 
-        [Display(Name = "Hotel Fotoğrafı")]
+        [Display(Name = "Otel Fotoğrafı")]
         public IFormFile? hotel_image { get; set; }
 
         [Display(Name = "Özellikler")]

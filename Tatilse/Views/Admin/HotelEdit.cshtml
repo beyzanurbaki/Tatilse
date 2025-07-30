@@ -1,6 +1,6 @@
 ﻿@model Tatilse.Models.HotelEditDTO
 
-<h2 class="mb-4">Hotel Güncelle</h2>
+<h2 class="mb-4">Otel Güncelle</h2>
 <hr />
 
 <form id="editForm" enctype="multipart/form-data" onsubmit="edit(event)" class="needs-validation" novalidate>
@@ -9,15 +9,15 @@
     <input type="hidden" asp-for="hotel_id" />
 
     <div class="mb-3">
-        <label asp-for="hotel_name" class="form-label">Hotel Adı</label>
+        <label asp-for="hotel_name" class="form-label">Otel Adı</label>
         <input asp-for="hotel_name" class="form-control" required />
         <div class="invalid-feedback">
-            Lütfen hotel adını giriniz.
+            Lütfen otel adını giriniz.
         </div>
     </div>
 
     <div class="mb-3">
-        <label asp-for="hotel_price" class="form-label">Hotel Fiyatı</label>
+        <label asp-for="hotel_price" class="form-label">Otel Fiyatı</label>
         <input asp-for="hotel_price" class="form-control" type="number" min="0" step="0.01" required />
         <div class="invalid-feedback">
             Geçerli bir fiyat giriniz.
@@ -25,7 +25,7 @@
     </div>
 
     <div class="mb-3">
-        <label asp-for="hotel_city" class="form-label">Hotel İl</label>
+        <label asp-for="hotel_city" class="form-label">Otel İl</label>
         <input asp-for="hotel_city" class="form-control" required />
         <div class="invalid-feedback">
             Lütfen il bilgisini giriniz.
@@ -33,7 +33,7 @@
     </div>
 
     <div class="mb-3">
-        <label asp-for="hotel_township" class="form-label">Hotel İlçe</label>
+        <label asp-for="hotel_township" class="form-label">Otel İlçe</label>
         <input asp-for="hotel_township" class="form-control" required />
         <div class="invalid-feedback">
             Lütfen ilçe bilgisini giriniz.
@@ -41,12 +41,12 @@
     </div>
 
     <div class="mb-3">
-        <label asp-for="hotel_description" class="form-label">Hotel Açıklaması</label>
+        <label asp-for="hotel_description" class="form-label">Otel Açıklaması</label>
         <textarea asp-for="hotel_description" class="form-control" rows="3"></textarea>
     </div>
 
     <div class="mb-4">
-        <label asp-for="hotel_image" class="form-label">Hotel Fotoğrafı</label>
+        <label asp-for="hotel_image" class="form-label">Otel Fotoğrafı</label>
         <input asp-for="hotel_image" type="file" class="form-control" accept="image/*" />
         <small class="form-text text-muted">Yeni bir görsel seçebilirsiniz (isteğe bağlı).</small>
     </div>

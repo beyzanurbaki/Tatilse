@@ -7,7 +7,7 @@ namespace Tatilse.Models
     {
         public int hotel_id { get; set; }
 
-        [Display(Name = "Hotel Ad")]
+        [Display(Name = "Otel Ad")]
         [Required]
         public string hotel_name { get; set; }
 
