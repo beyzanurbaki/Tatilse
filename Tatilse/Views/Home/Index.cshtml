@@ -9,32 +9,6 @@
 <div class="container">
     <div class="row">
 
-        <!-- Otel Listesi (8 sütun genişliğinde) -->
-        <div class="col-md-8">
-            @if (Model != null && Model.Any())
-            {
-                <div class="row">
-                    @foreach (var item in Model)
-                    {
-                        <div class="col-md-6 mb-4">
-                            <div class="card h-100">
-                                <img src="~/img/@(item.hotel_image ?? "default.jpg")" class="card-img-top" alt="@item.hotel_name" style="height: 200px; object-fit: cover;" />
-                                <div class="card-body d-flex flex-column">
-                                    <h5 class="card-title">@item.hotel_name</h5>
-                                    <p class="card-text">@item.hotel_city, @item.hotel_township</p>
-                                    <p class="card-text"><strong>Fiyat:</strong> @item.hotel_price.ToString("C")</p>
-                                    <a asp-controller="Hotel" asp-action="HotelDetails" asp-route-id="@item.hotel_id" class="btn btn-primary mt-auto">Detaylar</a>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </div>
-            }
-            else
-            {
-                <p>Hotel listesi yüklenemedi.</p>
-            }
-        </div>
 
   
 @*         <div class="col-md-4">
