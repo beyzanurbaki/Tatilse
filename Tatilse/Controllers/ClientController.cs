@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http; //session işlemleri için
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -18,8 +17,9 @@ namespace Tatilse.Controllers
             _context = context;
         }
 
+        [HttpGet]
         [AllowAnonymous]
-        public IActionResult Login(string returnUrl = null)
+        public IActionResult Login(string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             return View();
@@ -27,7 +27,7 @@ namespace Tatilse.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromForm] LoginRequest loginRequest, string returnUrl = null)
+        public async Task<IActionResult> Login([FromForm] LoginRequest loginRequest, string? returnUrl = null)
         {
             var client = await _context.Clients
                 .FirstOrDefaultAsync(c =>
@@ -40,6 +40,7 @@ namespace Tatilse.Controllers
         {
             new Claim(ClaimTypes.Name, client.client_username),
             new Claim("fullname", client.client_name + " " + client.client_surname),
+            new Claim("client_id", client.client_id.ToString()),
         };
 
                 if (client.isAdmin)
@@ -51,12 +52,10 @@ namespace Tatilse.Controllers
                 var principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync("MyCookieAuth", principal);
 
-                HttpContext.Session.SetInt32("client_id", client.client_id);
-
                 return Json(new
                 {
                     success = true,
-                    redirectUrl = !string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)
+                    redirectUrl = !string.IsNullOrEmpty(returnUrl)
                         ? returnUrl
                         : Url.Action("Index", "Home"),
                     isAdmin = client.isAdmin
@@ -65,6 +64,7 @@ namespace Tatilse.Controllers
 
             return Json(new { success = false, message = "Kullanıcı adı veya şifre hatalı." });
         }
+
 
         [Authorize]
         public async Task<IActionResult> Logout()

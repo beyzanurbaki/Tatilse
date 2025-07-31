@@ -107,7 +107,6 @@ namespace Tatilse.Controllers
         }
 
         [HttpPost]
-        [HttpPost]
         public IActionResult Calculate(int hotelId, DateTime startDate, DateTime endDate, int guestCount)
         {
             if (startDate >= endDate || guestCount <= 0)
@@ -139,11 +138,6 @@ namespace Tatilse.Controllers
 
             return PartialView("_RoomPricePartial", roomData);
         }
-
-
-
-
-
 
         //public async Task<IActionResult> HotelIndex()
         //{

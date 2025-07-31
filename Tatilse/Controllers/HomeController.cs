@@ -24,20 +24,6 @@ namespace Tatilse.Controllers
             return View(hotels);
         }
 
-
-        //[Authorize]
-        //public IActionResult Index()
-        //{
-        //    //var username = HttpContext.Session.GetString("client_username");
-
-        //    //if (string.IsNullOrEmpty(username))
-        //    //{
-        //    //    return RedirectToAction("Login", "Client");
-        //    //}
-
-        //    return View();
-        //}
-
         public IActionResult Privacy()
         {
             return View();

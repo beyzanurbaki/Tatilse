@@ -35,13 +35,13 @@
     }
 
     @* Adminse müşteri seçimi de olsun *@
-    @if (ViewBag.Clients != null)
+    @* @if (ViewBag.Clients != null)
     {
         <div class="form-group">
             <label>Müşteri</label>
             <select name="client_id" class="form-control" asp-items="ViewBag.Clients"></select>
         </div>
-    }
+    } *@
 
     <button type="submit" class="btn btn-primary mt-3">Kaydet</button>
 </form>

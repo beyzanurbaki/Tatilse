@@ -14,4 +14,15 @@ namespace Tatilse.Models.Request
         [Required]
         public int room_id { get; set; }
     }
+
+    public class ReservationCreatePageParametersDTO
+    {
+        public int guestCount { get; set; }
+
+        public DateTime startdate { get; set; }
+
+        public DateTime enddate { get; set; }
+
+        public int roomid { get; set; }
+    }
 }

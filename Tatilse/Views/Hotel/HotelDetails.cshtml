@@ -1,54 +1,94 @@
 ﻿@model Hotel
 
 <div class="container mt-4">
-    <!-- Fiyat hesaplama formu -->
-    <form id="calculateForm" class="row g-2 align-items-center mb-4">
-        <input type="hidden" name="hotelId" value="@Model.hotel_id" />
+	<!-- Fiyat hesaplama formu -->
+	<form id="calculateForm" class="row g-2 align-items-center mb-4">
+		<input type="hidden" name="hotelId" value="@Model.hotel_id" />
 
-        <div class="col-md-3">
-            <input type="date" name="startDate" class="form-control" required />
-        </div>
-        <div class="col-md-3">
-            <input type="date" name="endDate" class="form-control" required />
-        </div>
-        <div class="col-md-2">
-            <input type="number" name="guestCount" class="form-control" min="1" placeholder="Kişi sayısı" required />
-        </div>
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-outline-primary w-100">Fiyatları Güncelle</button>
-        </div>
-    </form>
+		<div class="col-md-3">
+			<input type="date" name="startDate" id="startDate" class="form-control" required />
+		</div>
+		<div class="col-md-3">
+			<input type="date" name="endDate" id="endDate" class="form-control" required />
+		</div>
+		<div class="col-md-2">
+			<input type="number" name="guestCount" id="guestCount" class="form-control" min="1" placeholder="Kişi sayısı" required />
+		</div>
+		<div class="col-md-2">
+			<button type="submit" class="btn btn-outline-primary w-100">Fiyatları Güncelle</button>
+		</div>
+	</form>
 </div>
 
-<!-- Otel bilgileri -->
 <div class="container mt-5">
-    <div class="text-center mb-4">
-        <img src="@Url.Content("~/img/hotel/" + Model.hotel_image)" class="img-fluid rounded shadow" style="max-height: 400px; object-fit: cover;" alt="Otel Fotoğrafı" />
-    </div>
+	<div class="text-center mb-4">
+		<img src="@Url.Content("~/img/hotel/" + Model.hotel_image)" class="img-fluid rounded shadow" style="max-height: 400px; object-fit: cover;" alt="Otel Fotoğrafı" />
+	</div>
 
-    <div class="card mb-4">
-        <div class="card-body">
-            <h2 class="card-title">@Model.hotel_name</h2>
-            <p><strong>Adres:</strong> @Model.hotel_city, @Model.hotel_township</p>
-            <p><strong>Açıklama:</strong> @Model.hotel_description</p>
-        </div>
-    </div>
+	<div class="card mb-4">
+		<div class="card-body">
+			<h2 class="card-title">@Model.hotel_name</h2>
+			<p><strong>Adres:</strong> @Model.hotel_city, @Model.hotel_township</p>
+			<p><strong>Açıklama:</strong> @Model.hotel_description</p>
+		</div>
+	</div>
 
-    <div class="card mb-4">
-        <div class="card-body">
-            <h3>Otel Özellikleri</h3>
-            <ul class="list-group list-group-flush">
-                @foreach (var feature in Model.features)
-                {
-                    <li class="list-group-item">@feature.feature_name</li>
-                }
-            </ul>
-        </div>
-    </div>
+	<div class="card mb-4">
+		<div class="card-body">
+			<h3>Otel Özellikleri</h3>
+			<ul class="list-group list-group-flush">
+				@foreach (var feature in Model.features)
+				{
+					<li class="list-group-item">@feature.feature_name</li>
+				}
+			</ul>
+		</div>
+	</div>
 </div>
 
 <!-- AJAX sonucu ve başlangıç odaları OTEL BİLGİLERİNİN ALTINDA -->
 <div class="container" id="roomPriceResults" style="margin-bottom: 40px;">
+	<div class="row">
+		@foreach (var room in Model.rooms)
+		{
+			<div class="col-md-4 mb-4">
+				<div class="card h-100">
+					<img src="@Url.Content("~/img/room/" + room.room_image)" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Oda Görseli" />
+					<div class="card-body">
+						<h5 class="card-title">@room.room_name</h5>
+						<p class="card-text">Fiyat: @room.room_price TL</p>
+						<p class="card-text">Kapasite: @room.room_max_people kişi</p>
+						<form class="reservation-form" method="post" action="/Reservation/Create" onsubmit="return validateAndFillForm(this, @room.room_id);">
+							<input type="hidden" name="roomId" />
+							<input type="hidden" name="guestCount" />
+							<input type="hidden" name="startDate" />
+							<input type="hidden" name="endDate" />
+							<button type="submit" class="btn btn-primary mt-2">Rezervasyon Yap</button>
+						</form>
+
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</div>
+
+@* <div class="container mt-4">
+    <!-- Tarih ve kişi sayısı girişi (kullanıcı buradan seçiyor) -->
+    <div class="row g-2 align-items-center mb-4">
+        <div class="col-md-3">
+            <input type="date" id="inputStartDate" class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <input type="date" id="inputEndDate" class="form-control" />
+        </div>
+        <div class="col-md-2">
+            <input type="number" id="inputGuestCount" class="form-control" min="1" placeholder="Kişi sayısı" />
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
     <div class="row">
         @foreach (var room in Model.rooms)
         {
@@ -59,8 +99,13 @@
                         <h5 class="card-title">@room.room_name</h5>
                         <p class="card-text">Fiyat: @room.room_price TL</p>
                         <p class="card-text">Kapasite: @room.room_max_people kişi</p>
-                        <form asp-controller="Reservation" asp-action="ReservationCreate" method="get" onsubmit="return checkDates(event, this);">
-                            <input type="hidden" name="roomId" value="@room.room_id" />
+
+                        <!-- REZERVASYON FORMU: gizli inputlarla veri taşınıyor -->
+                        <form class="reservation-form" method="post" action="/Reservation/Create" onsubmit="return validateAndFillForm(this, @room.room_id);">
+                            <input type="hidden" name="roomId" />
+                            <input type="hidden" name="guestCount" />
+                            <input type="hidden" name="startDate" />
+                            <input type="hidden" name="endDate" />
                             <button type="submit" class="btn btn-primary mt-2">Rezervasyon Yap</button>
                         </form>
                     </div>
@@ -68,49 +113,109 @@
             </div>
         }
     </div>
-</div>
+</div> *@
 
 @section Scripts {
-    <script>
-        // Tarih ve kişi sayısı kontrolü
-        function checkDates(event, form) {
-            const startDate = document.querySelector('input[name="startDate"]').value;
-            const endDate = document.querySelector('input[name="endDate"]').value;
-            const guestCount = document.querySelector('input[name="guestCount"]').value;
 
-            if (!startDate || !endDate) {
-                event.preventDefault();
-                alert("Lütfen önce giriş ve çıkış tarihlerini seçiniz.");
-                return false;
-            }
-            if (!guestCount || guestCount <= 0) {
-                event.preventDefault();
-                alert("Lütfen kişi sayısını giriniz.");
-                return false;
-            }
-            return true;
-        }
+	<script>
+		// Tarih ve kişi sayısı kontrolü - Fiyat hesaplama formu için
+		function checkDates(event) {
+			const startDate = document.querySelector('input[name="startDate"]').value;
+			const endDate = document.querySelector('input[name="endDate"]').value;
+			const guestCount = document.querySelector('input[name="guestCount"]').value;
 
-        // Fiyatları güncelleme AJAX işlemi
-        document.getElementById("calculateForm").addEventListener("submit", function (e) {
-            e.preventDefault();
+			if (!startDate || !endDate) {
+				event.preventDefault();
+				alert("Lütfen önce giriş ve çıkış tarihlerini seçiniz.");
+				return false;
+			}
+			if (new Date(endDate) <= new Date(startDate)) {
+				event.preventDefault();
+				alert("Çıkış tarihi giriş tarihinden büyük olmalıdır.");
+				return false;
+			}
+			if (!guestCount || guestCount <= 0) {
+				event.preventDefault();
+				alert("Lütfen kişi sayısını giriniz.");
+				return false;
+			}
+			return true;
+		}
 
-            const formData = new FormData(e.target);
+		// Fiyatları güncelleme AJAX işlemi
+		document.getElementById("calculateForm").addEventListener("submit", function (e) {
+			if (!checkDates(e)) return;  // Doğrulama başarısızsa submit'i durdur
 
-            fetch("/Hotel/Calculate", {
-                method: "POST",
-                body: formData
-            })
-            .then(res => {
-                if (!res.ok) throw new Error("Fiyatlar alınamadı.");
-                return res.text();
-            })
-            .then(html => {
-                document.getElementById("roomPriceResults").innerHTML = html;
-            })
-            .catch(err => {
-                alert(err.message);
-            });
-        });
-    </script>
+			e.preventDefault();
+
+			const formData = new FormData(e.target);
+
+			fetch("/Hotel/Calculate", {
+				method: "POST",
+				body: formData
+			})
+			.then(res => {
+				if (!res.ok) throw new Error("Fiyatlar alınamadı.");
+				return res.text();
+			})
+			.then(html => {
+				document.getElementById("roomPriceResults").innerHTML = html;
+			})
+			.catch(err => {
+				alert(err.message);
+			});
+		});
+
+		// Rezervasyon yap formu doğrulaması
+		function validateReservationForm(event) {
+			const startDate = document.querySelector('input[name="startDate"]').value;
+			const endDate = document.querySelector('input[name="endDate"]').value;
+			const guestCount = document.querySelector('input[name="guestCount"]').value;
+
+			if (!startDate || !endDate) {
+				alert("Lütfen önce giriş ve çıkış tarihlerini seçiniz.");
+				return false;  // Formun gönderilmesini engelle
+			}
+			if (new Date(endDate) <= new Date(startDate)) {
+				alert("Çıkış tarihi giriş tarihinden büyük olmalıdır.");
+				return false;
+			}
+			if (!guestCount || guestCount <= 0) {
+				alert("Lütfen kişi sayısını giriniz.");
+				return false;
+			}
+			return true; // Form gönderilebilir
+		}
+	</script>
+
+
+
+
+	<script>
+		// Form submit olmadan önce kontrol et ve gizli inputları güncelle
+		function validateAndFillForm(form, roomId) {
+			const startDate = document.getElementById("startDate").value;
+			const endDate = document.getElementById("endDate").value;
+			const guestCount = document.getElementById("guestCount").value;
+
+			if (!startDate || !endDate) {
+				alert("Lütfen giriş ve çıkış tarihlerini seçiniz.");
+				return false; // submit iptal
+			}
+			if (new Date(endDate) <= new Date(startDate)) {
+				alert("Çıkış tarihi, giriş tarihinden büyük olmalıdır.");
+				return false;
+			}
+			if (!guestCount || guestCount <= 0) {
+				alert("Lütfen geçerli kişi sayısı giriniz.");
+				return false;
+			}
+		
+			form.querySelector('input[name="roomId"]').value = roomId;
+			form.querySelector('input[name="guestCount"]').value = guestCount;
+			form.querySelector('input[name="startDate"]').value = startDate;
+			form.querySelector('input[name="endDate"]').value = endDate;
+			return true; // form gönderilebilir
+		}
+	</script>
 }

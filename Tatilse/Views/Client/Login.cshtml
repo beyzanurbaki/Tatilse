@@ -29,36 +29,46 @@
 
 <script>
     function showAlert(message, type = 'danger') {
-      const alertPlaceholder = document.getElementById('alertPlaceholder');
-      alertPlaceholder.innerHTML = `
-        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-          ${message}
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>`;
+        const alertPlaceholder = document.getElementById('alertPlaceholder');
+        alertPlaceholder.innerHTML = `
+            <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>`;
     }
 
     function login(event) {
-      event.preventDefault();
-      const formData = new FormData(event.currentTarget);
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
 
-      fetch("/Client/Login", {
-        method: "POST",
-        body: formData
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          if (data.isAdmin) {
-            window.location.href = "/Admin/Dashboard";
-          } else {
-            window.location.href = "/Home/Index";
-          }
-        } else {
-          showAlert(data.message);
-        }
-      })
-      .catch(err => {
-        showAlert("Bir hata oluştu: " + err.message);
-      });
+        fetch("/Client/Login", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            const contentType = res.headers.get("content-type") || "";
+            if (!contentType.includes("application/json")) {
+                return res.text().then(text => { throw new Error("JSON değil, gelen: " + text); });
+            }
+            return res.json();
+        })
+        .then(data => {
+            if (data.success) {
+                // Başarılı giriş sonrası yönlendirme
+                if (data.isAdmin) {
+                    window.location.href = "/Admin/Dashboard";
+                } else {
+                    window.location.href = data.redirectUrl || "/Home/Index";
+                }
+            } else {
+                showAlert(data.message || "Giriş başarısız.");
+            }
+        })
+        .catch(err => {
+            showAlert("Bir hata oluştu: " + err.message);
+        });
     }
 </script>

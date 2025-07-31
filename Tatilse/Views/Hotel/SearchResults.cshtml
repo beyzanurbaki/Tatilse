@@ -43,7 +43,9 @@ else
                             }
                         </p>
                     </div>
-                    <a href="~/Hotel/HotelDetails" class="d-inline-flex focus-ring py-1 px-2 text-decoration-none border rounded-2 btn btn-success">@item.hotel_price TL</a>
+                    <a href="@Url.Action("HotelDetails", "Hotel", new { id = item.hotel_id })" class="d-inline-flex focus-ring py-1 px-2 text-decoration-none border rounded-2 btn btn-success">
+                        @item.hotel_price TL
+                    </a>
                 </div>
             </div>
         }
