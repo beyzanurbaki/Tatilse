@@ -28,7 +28,6 @@ public class ReservationController : Controller
     [HttpPost]
     public async Task<IActionResult> Create([FromForm] ReservationCreatePageParametersDTO parameters)
     {
-        //var request = Request;
         var clientId = GetClientId();
         if (clientId == null)
         {
@@ -46,6 +45,12 @@ public class ReservationController : Controller
 
         await FillViewBagsAsync();
 
+        // Seçilen odayı ViewBag.SelectedRoom'a koymak için:
+        var selectedRoom = await _context.Rooms
+            .Include(r => r.hotel)
+            .FirstOrDefaultAsync(r => r.room_id == parameters.roomid);
+        ViewBag.SelectedRoom = selectedRoom;
+
         var dto = new ReservationCreateDTO
         {
             room_id = parameters.roomid,
@@ -56,16 +61,17 @@ public class ReservationController : Controller
         return View(dto);
     }
 
+
     [Authorize]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ReservationCreate(ReservationCreateDTO dto)
     {
         var clientId = GetClientId();
-        //if (clientId == null)
-        //{
-        //    return RedirectToAction("Login", "Client", new { returnUrl = Url.Action("ReservationCreate", "Reservation") });
-        //}
+        if (clientId == null)
+        {
+            return RedirectToAction("Login", "Client", new { returnUrl = Url.Action("ReservationCreate", "Reservation") });
+        }
 
         var room = await _context.Rooms
             .Include(r => r.reservations)
@@ -78,18 +84,21 @@ public class ReservationController : Controller
         if (!ModelState.IsValid)
         {
             await FillViewBagsAsync();
+            ViewBag.SelectedRoom = room;
             return View("Create", dto);
         }
 
-        //bool isAvailable = room.reservations.All(r =>
-        //    r.end_date <= dto.start_date || r.start_date >= dto.end_date);
+        bool isAvailable = !room.reservations.Any(r =>
+            r.start_date < dto.end_date && dto.start_date < r.end_date);
 
-        //if (!isAvailable)
-        //{
-        //    ModelState.AddModelError("", "Seçilen tarihlerde bu oda rezerve edilmiştir.");
-        //    await FillViewBagsAsync();
-        //    return View(dto);
-        //}
+        if (!isAvailable)
+        {
+            ModelState.AddModelError("", "Seçilen tarihler arasında bu oda için uygunluk yok.");
+            ViewBag.Alert = "Seçilen tarihler arasında bu oda için uygunluk yok.";
+            await FillViewBagsAsync();
+            ViewBag.SelectedRoom = room;
+            return View("Create", dto);
+        }
 
         var reservation = new Reservation
         {
@@ -104,6 +113,7 @@ public class ReservationController : Controller
 
         return RedirectToAction("Payment", new { id = reservation.reservation_id });
     }
+
 
     private async Task FillViewBagsAsync()
     {
@@ -124,10 +134,12 @@ public class ReservationController : Controller
         }).ToList();
     }
 
+
     [HttpGet("reservation/payment/{reservationId}")]
     public IActionResult Payment(int reservationId)
     {
         ViewBag.ReservationId = reservationId;
         return View();
     }
+
 }

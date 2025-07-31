@@ -105,6 +105,38 @@ namespace Tatilse.Controllers
 
             return PartialView("SearchResults", filteredHotels);
         }
+        [HttpPost]
+        public IActionResult Calculate(int hotelId, DateTime startDate, DateTime endDate, int guestCount)
+        {
+            if (startDate >= endDate || guestCount <= 0)
+                return BadRequest("Geçerli tarih ve kişi sayısı giriniz.");
+
+            var hotel = _context.Hotels
+                .Include(h => h.rooms)
+                .FirstOrDefault(h => h.hotel_id == hotelId);
+
+            if (hotel == null)
+                return NotFound();
+
+            int totalDays = (endDate - startDate).Days;
+
+            var roomData = hotel.rooms.Select(r =>
+            {
+                bool isAvailable = r.room_max_people >= guestCount; // İstersen rezervasyon kontrolleri eklenebilir
+
+                return new
+                {
+                    r.room_id,
+                    r.room_image,
+                    r.room_name,
+                    r.room_max_people,
+                    total_price = r.room_price * totalDays,
+                    isAvailable
+                };
+            }).ToList();
+
+            return PartialView("_RoomPricePartial", roomData);
+        }
 
         public IActionResult HotelDetails(int id)
         {
