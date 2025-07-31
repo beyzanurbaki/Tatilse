@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Security.Claims;
 using Tatilse.Data;
 using Tatilse.Models;
 
@@ -17,9 +18,14 @@ namespace Tatilse.Controllers
             _context = context;
             _logger = logger;
         }
+
         public async Task<IActionResult> Index()
         {
             var hotels = await _context.Hotels.ToListAsync();
+
+            // Kullanýcýnýn cinsiyet bilgisini claim'den al
+            var gender = User.FindFirstValue(ClaimTypes.Gender) ?? User.FindFirstValue("gender") ?? "unknown";
+            ViewBag.UserGender = gender;
 
             return View(hotels);
         }
