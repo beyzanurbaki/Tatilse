@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<Hotel>
 
 <body>
+    <!-- ARA + FİLTRE SATIRI -->
     <div class="container mt-4">
         <form onsubmit="search(event)" class="row g-2 align-items-center">
             <div class="col-md-3">
@@ -15,11 +16,45 @@
             <div class="col-md-2">
                 <input type="number" name="guestCount" class="form-control" min="1" placeholder="Kişi sayısı" />
             </div>
-            <div class="col-md-2">
+            <div class="col-md-1">
                 <button type="submit" class="btn btn-outline-primary w-100">Ara</button>
+            </div>
+            <div class="col-md-1">
+                <button type="button" class="btn btn-outline-secondary w-100" onclick="toggleFilter()">Filtre</button>
             </div>
         </form>
     </div>
+    <!-- FİLTRE PANELİ -->
+    <div class="container mt-3" id="filter-panel" style="display:none;">
+        <form onsubmit="filterSearch(event)">
+            <div class="card p-3 shadow-sm">
+                <h5>Otel Özelliklerine Göre Filtrele</h5>
+                <div class="row">
+                    @if (ViewBag.Features != null)
+                    {
+                        @foreach (var feature in ViewBag.Features as List<Feature>)
+                        {
+                            <div class="form-check col-md-3">
+                                <input class="form-check-input" type="checkbox" name="featureIds" value="@feature.feature_id" id="feature_@feature.feature_id" />
+                                <label class="form-check-label" for="feature_@feature.feature_id">
+                                    @feature.feature_name
+                                </label>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>Özellikler yüklenemedi.</p>
+                    }
+                </div>
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-success">Filtrele</button>
+                    <button type="button" class="btn btn-link" onclick="toggleFilter()">Kapat</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
 
     <div class="container mt-4" id="search-results">
         <div class="row">
@@ -68,46 +103,65 @@
     </div>
 </body>
 <script>
-	//   function search(event) {
-	//     event.preventDefault();
-	//     const formData = new FormData(event.currentTarget);
+    // Ana arama formu için
+    function search(event) {
+        event.preventDefault();
 
-	//     fetch("/Hotel/Search", {
-	//         method: "POST",
-	//         body: formData
-	//     })
-	//     .then(res => res.text()) // HTML olarak al
-	//     .then(html => {
-	//         document.getElementById("search-results").innerHTML = html;
-	//     })
-	//     .catch(error => {
-	//         alert("Bir hata oluştu: " + error);
-	//     });
-	// }
+        const form = event.currentTarget;
+        const formData = new FormData(form);
 
-	function search(event) {
-		event.preventDefault();
-		const formData = new FormData(event.currentTarget);
+        // CSRF token'ı header olarak almak için
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
 
-		fetch("/Hotel/Search", {
-			method: "POST",
-			body: formData
-		})
-		.then(res => {
-			if (!res.ok) {
-				return res.text().then(err => { throw new Error(err); });
-			}
-			return res.text();
-		})
-		.then(html => {
-			document.getElementById("search-results").innerHTML = html;
-		})
-		.catch(error => {
-			alert(error.message);
-		});
-	}
+        fetch("/Hotel/Search", {
+            method: "POST",
+            headers: {
+                'RequestVerificationToken': token
+            },
+            body: formData
+        })
+        .then(res => {
+            if (!res.ok) {
+                return res.text().then(err => { throw new Error(err); });
+            }
+            return res.text();
+        })
+        .then(html => {
+            document.getElementById("search-results").innerHTML = html;
+        })
+        .catch(error => {
+            alert("Hata oluştu: " + error.message);
+        });
+    }
 
+    // Filtre panelindeki özelliklere göre filtreleme için
+    function filterSearch(event) {
+        event.preventDefault();
 
+        const form = event.currentTarget;
+        const formData = new FormData(form);
+
+        fetch("/Hotel/FilterByFeatures", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => {
+            if (!res.ok) {
+                return res.text().then(err => { throw new Error(err); });
+            }
+            return res.text();
+        })
+        .then(html => {
+            document.getElementById("search-results").innerHTML = html;
+        })
+        .catch(error => {
+            alert("Filtreleme sırasında hata oluştu: " + error.message);
+        });
+    }
+
+    // Filtre panelini göster/gizle
+    function toggleFilter() {
+        const panel = document.getElementById("filter-panel");
+        panel.style.display = panel.style.display === "none" ? "block" : "none";
+    }
 </script>
-
-
