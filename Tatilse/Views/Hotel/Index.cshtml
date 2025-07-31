@@ -27,16 +27,16 @@
     <!-- FİLTRE PANELİ -->
     <div class="container mt-3" id="filter-panel" style="display:none;">
         <form onsubmit="filterSearch(event)">
-            <div class="card p-3 shadow-sm">
-                <h5>Otel Özelliklerine Göre Filtrele</h5>
-                <div class="row">
+            <div class="card p-4 shadow-sm rounded-3 border-primary">
+                <h5 class="mb-4 text-primary">Otel Özelliklerine Göre Filtrele</h5>
+                <div class="row gy-3">
                     @if (ViewBag.Features != null)
                     {
                         @foreach (var feature in ViewBag.Features as List<Feature>)
                         {
-                            <div class="form-check col-md-3">
+                            <div class="form-check col-6 col-sm-4 col-md-3">
                                 <input class="form-check-input" type="checkbox" name="featureIds" value="@feature.feature_id" id="feature_@feature.feature_id" />
-                                <label class="form-check-label" for="feature_@feature.feature_id">
+                                <label class="form-check-label fw-semibold" for="feature_@feature.feature_id">
                                     @feature.feature_name
                                 </label>
                             </div>
@@ -44,16 +44,17 @@
                     }
                     else
                     {
-                        <p>Özellikler yüklenemedi.</p>
+                        <p class="text-danger">Özellikler yüklenemedi.</p>
                     }
                 </div>
-                <div class="mt-3">
-                    <button type="submit" class="btn btn-success">Filtrele</button>
-                    <button type="button" class="btn btn-link" onclick="toggleFilter()">Kapat</button>
+                <div class="mt-4 d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary px-4">Filtrele</button>
+                    <button type="button" class="btn btn-outline-secondary px-4" onclick="toggleFilter()">Kapat</button>
                 </div>
             </div>
         </form>
     </div>
+
 
 
     <div class="container mt-4" id="search-results">
@@ -75,7 +76,7 @@
                             <h5 class="card-title">@item.hotel_name</h5>
                             <p class="card-text card-description">@item.hotel_description</p>
                             <p class="card-text">
-                          @*       <strong>Fiyat:</strong> @item.hotel_price ₺ <br /> *@
+                                @*       <strong>Fiyat:</strong> @item.hotel_price ₺ <br /> *@
                                 <strong>İl:</strong> @item.hotel_city <br />
                                 <strong>İlçe:</strong> @item.hotel_township
                             </p>
