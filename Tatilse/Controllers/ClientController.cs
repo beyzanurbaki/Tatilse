@@ -52,6 +52,9 @@ namespace Tatilse.Controllers
                 var principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync("MyCookieAuth", principal);
 
+                // ✅ Session'a client_id yazılıyor
+                HttpContext.Session.SetInt32("client_id", client.client_id);
+
                 return Json(new
                 {
                     success = true,

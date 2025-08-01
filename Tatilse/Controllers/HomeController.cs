@@ -23,12 +23,21 @@ namespace Tatilse.Controllers
         {
             var hotels = await _context.Hotels.ToListAsync();
 
-            // Kullanýcýnýn cinsiyet bilgisini claim'den al
-            var gender = User.FindFirstValue(ClaimTypes.Gender) ?? User.FindFirstValue("gender") ?? "unknown";
-            ViewBag.UserGender = gender;
+            bool showAd = false;
+            if (HttpContext.Session.GetInt32("client_id") is int clientId)
+            {
+                var client = await _context.Clients.FindAsync(clientId);
+                if (client != null && client.client_gender == true)
+                {
+                    showAd = true; // kadýnsa
+                }
+            }
+
+            ViewBag.ShowAd = showAd;
 
             return View(hotels);
         }
+
 
         public IActionResult Privacy()
         {

@@ -49,6 +49,7 @@ namespace Tatilse.Data
         [MaxLength(12, ErrorMessage = "12 karakterden fazla şifre tanımlayamazsınız.")]
         public string client_passw { get; set; }
 
+        public bool client_gender { get; set; }
         public bool isAdmin { get; set; }
     }
 }

@@ -6,7 +6,7 @@
 <h2>Müşteri Ekle</h2> @* hotel başlığı *@
 <hr> @*çizgi*@
 <form asp-controller="Client" asp-action="Create" method="post">
-		<div class="mb-3">
+	<div class="mb-3">
 		<label asp-for="client_name" class="form-label">Ad</label>
 		<input asp-for="client_name" class="form-control" required />
 		<div class="invalid-feedback">
@@ -15,7 +15,7 @@
 	</div>
 	<div class="mb-3">
 		<label asp-for="client_surname" class="form-label">Soyad</label>
-		<input asp-for="client_surname" class="form-control" required/>
+		<input asp-for="client_surname" class="form-control" required />
 
 		<div class="mb-3">
 			<label asp-for="client_username" class="form-label">Kullanıcı adı</label>
@@ -23,30 +23,44 @@
 			<span asp-validation-for="client_username" class="text-danger"></span>
 		</div>
 
-	<div class="mb-3">
-		<label asp-for="client_passw" class="form-label">Şifre</label>
-		<input asp-for="client_passw" class="form-control" />
-	</div>
-	<div class="mb-3">
-	<label asp-for="client_birthdate" class="form-label">Doğum Tarihi</label>
-	<input asp-for="client_birthdate" class="form-control" />
-	</div>
+		<div class="mb-3">
+			<label asp-for="client_passw" class="form-label">Şifre</label>
+			<input asp-for="client_passw" class="form-control" />
+		</div>
 
-	<div class="mb-3">
-	<label asp-for="client_identity" class="form-label">Kimlik Numarası</label>
-	<input asp-for="client_identity" class="form-control" />
-	</div>
-	<div class="mb-3">
-	<label asp-for="client_phone" class="form-label">Telefon Numarası</label>
-	<input asp-for="client_phone" class="form-control" />
-	</div>
+		<div class="mb-3">
+			<label asp-for="client_gender" class="form-label">Cinsiyet</label>
+			<select asp-for="client_gender" class="form-control">
+				<option value="true">
+				Kadın	
+				</option>
+				<option value="false">
+					Erkek
+				</option>
+			</select>
 
-	<div class="mb-3">
-	<label asp-for="client_email" class="form-label">E posta</label>
-	<input asp-for="client_email" class="form-control" />
-	</div>
+		</div>
 
-	<button type="submit" class="btn btn-secondary">Kaydet</button>
+		<div class="mb-3">
+			<label asp-for="client_birthdate" class="form-label">Doğum Tarihi</label>
+			<input asp-for="client_birthdate" class="form-control" />
+		</div>
+
+		<div class="mb-3">
+			<label asp-for="client_identity" class="form-label">Kimlik Numarası</label>
+			<input asp-for="client_identity" class="form-control" />
+		</div>
+		<div class="mb-3">
+			<label asp-for="client_phone" class="form-label">Telefon Numarası</label>
+			<input asp-for="client_phone" class="form-control" />
+		</div>
+
+		<div class="mb-3">
+			<label asp-for="client_email" class="form-label">E posta</label>
+			<input asp-for="client_email" class="form-control" />
+		</div>
+
+		<button type="submit" class="btn btn-secondary">Kaydet</button>
 
 
 </form>

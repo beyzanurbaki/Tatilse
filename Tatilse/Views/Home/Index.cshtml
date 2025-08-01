@@ -4,11 +4,10 @@
 
 <h2>Hoşgeldiniz!</h2>
 
-@if (ViewBag.UserGender == "female")
+@if (ViewBag.ShowAd)
 {
-    <div class="advertisement">
-        <a href="https://www.ornek-reklam-linki.com" target="_blank" rel="noopener noreferrer">
-            <img src="~/img/advertisement.jpg" alt="Reklam Banner" class="img-fluid rounded mb-3" />
-        </a>
+    <div class="alert alert-info mt-3">
+        Kadınlara özel kampanya: %50 indirim!
     </div>
 }
+
