@@ -239,36 +239,79 @@ namespace Tatilse.Controllers
             if (reservation == null)
                 return NotFound();
 
-            // SelectList ile dropdown doldurabilirsin (Client ve Room seçimleri için)
-            ViewData["Clients"] = new SelectList(_context.Clients, "client_id", "client_name");
-            ViewData["Rooms"] = new SelectList(_context.Rooms, "room_id", "room_name"); // room_name diye bir alan varsa
+            var model = new ReservationEditDTO
+            {
+                reservation_id = reservation.reservation_id,  // DTO'da varsa
+                start_date = reservation.start_date,
+                end_date = reservation.end_date,
+                client_id = reservation.client_id,
+                room_id = reservation.room_id
+            };
 
-            return View(reservation);
+            ViewData["Clients"] = new SelectList(_context.Clients, "client_id", "client_name", model.client_id);
+            ViewData["Rooms"] = new SelectList(_context.Rooms, "room_id", "room_name", model.room_id);
+
+            return View(model); // DTO gönderiyoruz
         }
 
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ReservationEdit(int id, ReservationEditDTO model)
+        public async Task<IActionResult> ReservationEdit(int id, ReservationEditDTO dto)
         {
+            var room = await _context.Rooms
+                .Include(r => r.reservations)
+                .FirstOrDefaultAsync(r => r.room_id == dto.room_id);
+
+            if (room == null)
+                return NotFound();
+
             if (!ModelState.IsValid)
             {
-                ViewData["Clients"] = new SelectList(_context.Clients, "client_id", "client_name", model.client_id);
-                ViewData["Rooms"] = new SelectList(_context.Rooms, "room_id", "room_name", model.room_id);
-                return View(model);
+                await FillViewBagsAsync();
+                ViewBag.SelectedRoom = room;
+                return View(dto);
+            }
+
+            var overlappingReservationsCount = room.reservations
+                .Count(r => r.reservation_id != id && r.start_date < dto.end_date && dto.start_date < r.end_date);
+
+            if (overlappingReservationsCount >= room.room_quantity)
+            {
+                ModelState.AddModelError("", "Seçilen tarihler arasında bu odanın tüm birimleri doludur.");
+                ViewBag.Alert = "Seçilen tarihler arasında bu odanın tüm birimleri doludur.";
+                await FillViewBagsAsync();
+                ViewBag.SelectedRoom = room;
+                return View(dto);
             }
 
             var reservation = await _context.Reservations.FindAsync(id);
             if (reservation == null) return NotFound();
 
-            reservation.start_date = model.start_date;
-            reservation.end_date = model.end_date;
-            reservation.client_id = model.client_id;
-            reservation.room_id = model.room_id;
+            reservation.start_date = dto.start_date;
+            reservation.end_date = dto.end_date;
+            reservation.client_id = dto.client_id;
+            reservation.room_id = dto.room_id;
 
             await _context.SaveChangesAsync();
             return RedirectToAction("ReservationIndex");
+        }
+
+        private async Task FillViewBagsAsync()
+        {
+            var rooms = await _context.Rooms.Include(r => r.hotel).ToListAsync();
+            ViewBag.Rooms = new SelectList(rooms, "room_id", "room_name");
+
+            var clients = await _context.Clients.ToListAsync();
+            ViewBag.Clients = new SelectList(clients, "client_id", "client_name");
+
+            ViewBag.RoomDetails = rooms.Select(r => new
+            {
+                RoomId = r.room_id,
+                RoomName = r.room_name,
+                HotelName = r.hotel.hotel_name
+            }).ToList();
         }
 
 

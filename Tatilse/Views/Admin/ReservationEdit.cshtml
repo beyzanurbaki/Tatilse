@@ -1,7 +1,14 @@
-﻿@model Reservation
+﻿@model Tatilse.Models.Request.ReservationEditDTO
 
 <h2>Rezervasyon Güncelle</h2>
-
+@* 
+@if (ViewBag.Alert != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Alert
+    </div>
+}
+ *@
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
 <form asp-action="ReservationEdit" method="post">
@@ -21,5 +28,5 @@
     <label>Oda</label>
     <select asp-for="room_id" asp-items="ViewBag.Rooms" class="form-control"></select>
 
-    <button type="submit" class="btn btn-success">Kaydet</button>
+    <button type="submit" class="btn btn-success mt-3">Kaydet</button>
 </form>
