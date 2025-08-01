@@ -88,13 +88,13 @@ public class ReservationController : Controller
             return View("Create", dto);
         }
 
-        // Seçilen tarih aralığında odaya yapılmış rezervasyonları say
-        var overlappingReservationsCount = room.reservations
-            .Count(r => r.start_date < dto.end_date && dto.start_date < r.end_date);
+      // Seçilen tarih aralığında odaya yapılmış rezervasyonları say
+      var overlappingReservationsCount = room.reservations
+          .Count(r => r.start_date < dto.end_date && dto.start_date < r.end_date);
 
-        if (overlappingReservationsCount >= room.room_quantity)
-        {
-            ModelState.AddModelError("", "Seçilen tarihler arasında bu odanın tüm birimleri doludur.");
+      if (overlappingReservationsCount >= room.room_quantity)
+      {
+          ModelState.AddModelError("", "Seçilen tarihler arasında bu odanın tüm birimleri doludur.");
             ViewBag.Alert = "Seçilen tarihler arasında bu odanın tüm birimleri doludur.";
             await FillViewBagsAsync();
             ViewBag.SelectedRoom = room;

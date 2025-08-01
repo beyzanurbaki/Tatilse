@@ -56,16 +56,22 @@ namespace Tatilse.Controllers
             var filteredHotels = hotels
                 .Where(h => h.rooms.Any(room =>
                     room.room_max_people >= guestCount &&
-                    room.reservations.All(res =>
-                        res.end_date <= startDate || res.start_date >= endDate)))
+                    room.reservations.Count(res =>
+                        //res.end_date <= startDate || res.start_date >= endDate)
+                        !(res.end_date < startDate || res.start_date > endDate)
+                    ) < room.room_quantity
+                    ))
                 .ToList();
 
             foreach (var hotel in filteredHotels)
             {
                 var suitableRoom = hotel.rooms.FirstOrDefault(room =>
                     room.room_max_people >= guestCount &&
-                    room.reservations.All(res =>
-                        res.end_date <= startDate || res.start_date >= endDate));
+                    room.reservations.Count(res =>
+                        //res.end_date <= startDate || res.start_date >= endDate)
+                        !(res.end_date < startDate || res.start_date > endDate)
+                    ) < room.room_quantity
+                    );
 
                 hotel.hotel_price = suitableRoom != null ? suitableRoom.room_price * totalDays : 0;
             }
