@@ -52,7 +52,6 @@ namespace Tatilse.Controllers
                 var principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync("MyCookieAuth", principal);
 
-                // ✅ Session'a client_id yazılıyor
                 HttpContext.Session.SetInt32("client_id", client.client_id);
 
                 return Json(new
@@ -60,7 +59,7 @@ namespace Tatilse.Controllers
                     success = true,
                     redirectUrl = !string.IsNullOrEmpty(returnUrl)
                         ? returnUrl
-                        : Url.Action("Index", "Home"),
+                        : Url.Action("Index", "Hotel"),
                     isAdmin = client.isAdmin
                 });
             }

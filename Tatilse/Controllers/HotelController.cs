@@ -27,11 +27,26 @@ namespace Tatilse.Controllers
                 hotel.hotel_price = hotel.rooms.Any() ? hotel.rooms.Min(r => r.room_price) : 0;
             }
 
-            // Özellik listesini ViewBag ile gönderiyoruz (filtre paneli için)
-            ViewBag.Features = await _context.Features.ToListAsync();
+
+            ViewBag.Features = await _context.Features.ToListAsync();  // Özellik listesini ViewBag ile gönderiyoruz (filtre paneli için)
+
+
+            bool showAd = false; //erkekse reklam gösterme
+
+            if (HttpContext.Session.GetInt32("client_id") is int clientId)
+            {
+                var client = await _context.Clients.FindAsync(clientId);
+                if (client != null && client.client_gender == true) // true = kadın
+                {
+                    showAd = true;
+                }
+            }
+
+            ViewBag.ShowAd = showAd;
 
             return View(hotels);
         }
+
 
         [HttpPost]
         public IActionResult Search(string hotelName, DateTime? startDate, DateTime? endDate, int? guestCount)
